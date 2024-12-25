@@ -1,59 +1,119 @@
-**MovieLand**
+# **MovieLand**
 
-این یک اپلیکیشن فیلم مبتنی بر React است که به کاربران امکان می‌دهد دسته‌بندی‌های مختلف فیلم را با استفاده از API پایگاه داده فیلم TMDb مرور و کاوش کنند. 
-این برنامه یک رابط کاربری تعاملی و واکنش‌گرا با استفاده از Tailwind CSS ارائه می‌دهد.
-کاربران می‌توانند جزئیاتی مانند خلاصه‌ها، ژانرها و امتیازات فیلم‌ها را مشاهده کنند. قابلیت ورود به سیستم با استفاده از React Context API پیاده‌سازی شده است.
+یک اپلیکیشن فیلم مبتنی بر React است که به کاربران امکان می‌دهد دسته‌بندی‌های مختلف فیلم‌ها را با استفاده از API پایگاه داده فیلم TMDb مرور و کاوش کنند. این برنامه یک رابط کاربری تعاملی و واکنش‌گرا با استفاده از **Tailwind CSS** ارائه می‌دهد. کاربران می‌توانند جزئیاتی مانند خلاصه‌ها، ژانرها و امتیازات فیلم‌ها را مشاهده کنند. قابلیت ورود به سیستم با استفاده از **React Context API** پیاده‌سازی شده است.
 
-**دسته‌بندی‌های فیلم:**
+## **ویژگی‌ها**
 
-مرور فیلم‌ها بر اساس دسته‌بندی‌هایی مانند up coming، Top Ratedا و Popular.
+- **مرور فیلم‌ها:** کاوش و مرور فیلم‌ها بر اساس دسته‌بندی‌هایی مانند:
+  - **Upcoming**
+  - **Top Rated**
+  - **Popular**
 
-**مشاهده اطلاعات دقیق شامل:**
+- **مشاهده جزئیات فیلم‌ها:** نمایش اطلاعات دقیق فیلم‌ها شامل:
+  - **عنوان فیلم**
+  - **خلاصه داستان**
+  - **ژانر**
+  - **امتیاز**
 
-عنوان فیلم
-خلاصه داستان،
-ژانر،
-امتیاز،
+- **احراز هویت:** قابلیت ورود به سیستم با استفاده از **React Context API**.
 
-**احراز هویت:**
+- **نمایش تصاویر:** نمایش **پوسترها** و **تصاویر پس‌زمینه** فیلم‌ها.
+  > **توجه:** برای مشاهده تصاویر، نیاز به فعال کردن فیلترشکن دارید.
 
-قابلیت ورود به سیستم با استفاده از React Context API.
+## **اطلاعات ورود آزمایشی**
 
-**اطلاعات ورود آزمایشی:**
+برای ورود به سیستم از اطلاعات زیر استفاده کنید:
 
-نام کاربری: user،
-رمز عبور: user123
+- **نام کاربری:** `user`
+- **رمز عبور:** `user123`
 
-**طراحی واکنش‌گرا:**
+## **تکنولوژی‌های استفاده‌شده**
 
-رابط کاربری کاملاً واکنش‌گرا با استفاده از Tailwind CSS.
+- **فرانت‌اند:** React.js
+- **استایل‌دهی:** Tailwind CSS
+- **مدیریت وضعیت:** React Context API
+- **اتصال به API:** TMDb API
+- **اعتبارسنجی فرم:** اعتبارسنجی سفارشی فرم‌ها
 
-**نمایش تصاویر:**
+## **طراحی واکنش‌گرا**
 
-پوسترها و تصاویر پس‌زمینه فیلم‌ها نمایش داده می‌شوند.
-**توجه: برای مشاهده تصاویر، نیاز به فعال کردن فیلترشکن دارید.**
+رابط کاربری اپلیکیشن کاملاً واکنش‌گرا است و با استفاده از **Tailwind CSS** طراحی شده است، به طوری که تجربه کاربری بهینه‌ای در دستگاه‌های مختلف (موبایل، تبلت و دسکتاپ) فراهم می‌کند.
 
-**تکنولوژی‌های استفاده شده**
+## **قابلیت‌های آینده**
 
-**فرانت‌اند:** React.js
+در نسخه‌های آینده، قابلیت‌های زیر به اپلیکیشن اضافه خواهد شد:
 
-**استایل‌دهی:** Tailwind CSS
+1. افزودن **ثبت‌نام کاربران** و **مدیریت پروفایل**.
+2. پیاده‌سازی قابلیت **افزودن فیلم‌های محبوب به لیست علاقه‌مندی‌ها**.
+3. اضافه کردن قابلیت **جستجو** برای پیدا کردن فیلم‌ها.
+4. افزودن **پشتیبانی از نظرات و امتیازات کاربران**.
 
-**مدیریت وضعیت:** React Context API
+---
 
-**اتصال به API:**
- استفاده از TMDb API 
+### **نکات تکمیلی**
 
-**اعتبارسنجی:**
-اعتبارسنجی فرم سفارشی
+- برای مشاهده پوسترها و تصاویر پس‌زمینه فیلم‌ها، باید **فیلترشکن** خود را فعال کنید.
+- این اپلیکیشن با استفاده از **React Context API** برای مدیریت وضعیت استفاده شده است.
 
-**بهبودهای آینده**
+- # **MovieLand**
 
-اضافه کردن ثبت‌نام کاربران و مدیریت پروفایل.
+**MovieLand** is a React-based movie application that allows users to browse and explore different movie categories using the TMDb movie database API. The app provides an interactive and responsive user interface built with **Tailwind CSS**. Users can view details such as summaries, genres, and ratings of movies. The authentication system is implemented using **React Context API**.
 
-پیاده‌سازی قابلیت افزودن فیلم‌های محبوب به لیست علاقه‌مندی‌ها.
+## **Features**
 
-اضافه کردن قابلیت جستجو.
+- **Browse Movies:** Explore movies based on categories such as:
+  - **Upcoming**
+  - **Top Rated**
+  - **Popular**
 
-اضافه کردن پشتیبانی از نظرات و امتیازات کاربران.
+- **View Movie Details:** Display detailed information about movies including:
+  - **Movie Title**
+  - **Plot Summary**
+  - **Genre**
+  - **Rating**
+
+- **Authentication:** User login functionality is implemented using **React Context API**.
+
+- **Image Display:** Display **posters** and **background images** for movies.
+  > **Note:** You will need to enable a VPN to view images.
+
+## **Test Login Information**
+
+Use the following credentials to log in:
+
+- **Username:** `user`
+- **Password:** `user123`
+
+## **Technologies Used**
+
+- **Frontend:** React.js
+- **Styling:** Tailwind CSS
+- **State Management:** React Context API
+- **API Integration:** TMDb API
+- **Form Validation:** Custom form validation
+
+## **Responsive Design**
+
+The app features a fully responsive user interface designed with **Tailwind CSS**, ensuring an optimal user experience across all devices (mobile, tablet, and desktop).
+
+## **Upcoming Features**
+
+The following features will be added in future versions:
+
+1. **User Registration** and **Profile Management**.
+2. Ability to **add popular movies to the favorites list**.
+3. **Search functionality** to find specific movies.
+4. Support for **user comments and ratings**.
+
+---
+
+### **Additional Notes**
+
+- To view movie posters and background images, you need to enable a **VPN**.
+- The app uses **React Context API** for state management.
+
+---
+
+
+---
 
