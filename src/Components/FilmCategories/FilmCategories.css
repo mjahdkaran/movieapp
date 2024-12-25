@@ -1,0 +1,32 @@
+/* برای کروم، اج و سایر مرورگرهای WebKit */
+.scroll-container::-webkit-scrollbar {
+    width: 8px !important; /* عرض اسکرول */
+    height: 8px !important; /* ارتفاع اسکرول */
+
+
+  }
+  
+  .scroll-container::-webkit-scrollbar-track {
+    background: #1a1a1a; /* رنگ پس‌زمینه */
+    border-radius: 8px;
+  }
+  
+  .scroll-container::-webkit-scrollbar-thumb {
+    background: #ff4081;  /* رنگ بخش فعال اسکرول */
+    border-radius: 8px; /* گرد کردن اسکرول */
+ 
+
+  }
+  
+  .scroll-container::-webkit-scrollbar-thumb:hover {
+    background:     #ff6388;/* رنگ در حالت hover */
+
+  }
+  
+  /* برای فایرفاکس */
+  .scroll-container {
+    scrollbar-width: thin; /* باریک شدن اسکرول */
+   
+    scrollbar-color: #ff4081 #1a1a1a; /*رنگ اسکرول و پس‌زمینه*/
+  }
+  

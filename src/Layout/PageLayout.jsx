@@ -4,9 +4,9 @@ import Header from '../Components/Header/Header'
 
 export default function PageLayout({ children }) {
     return (
-        <>
+        <div className='bg-black '>
             <Header />
             {children}
-        </>
+        </div>
     )
 }

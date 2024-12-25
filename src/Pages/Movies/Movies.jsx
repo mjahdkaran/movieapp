@@ -9,10 +9,13 @@ export default function Movies() {
 
             <PageLayout>
                 <FilteringHeader />
-                <FilmCategories title='up coming' />
-                <FilmCategories title='Top Rated' />
-                <FilmCategories title='Popular' />
-                <FilmCategories title='Now Playing' />
+                <div className='mt-20'>
+                    <FilmCategories title='up coming' />
+                    <FilmCategories title='Top Rated' />
+                    <FilmCategories title='Popular' />
+                    <FilmCategories title='Now Playing' />
+                </div>
+
 
             </PageLayout>
 

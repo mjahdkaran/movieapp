@@ -3,13 +3,19 @@ import './App.css'
 import Movies from './Pages/Movies/Movies'
 import { BrowserRouter as Router } from 'react-router-dom'
 import AppRouter from './routes'
+import { AuthProvider } from './Context/AuthContext'
 
 function App() {
 
   return (
     <Router>
-      <AppRouter />
+
+      <AuthProvider>
+        <AppRouter />
+      </AuthProvider>
     </Router>
+
+
   )
 }
 
