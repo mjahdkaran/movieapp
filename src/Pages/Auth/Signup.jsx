@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useContext, useEffect, useState } from 'react';
 
-
+import { Eye, NoEye } from '../../utils/icon';
+import { useAuth } from '../../Context/AuthContext';
 const Signup = () => {
+
+    const [isShowPassword, setIsShowPassword] = useState(false);
+    const [showErrorToggle,setShowErrorToggle] = useState(false)
+    const { signUp,signUpError ,getToken} = useAuth()
     const [formValues, setFormValues] = useState({
         username: '',
         email: '',
@@ -12,8 +16,6 @@ const Signup = () => {
     })
 
     const [errors, setErrors] = useState({})
-
-
 
     const handlechange = (e) => {
         const { name, value } = e.target
@@ -52,17 +54,25 @@ const Signup = () => {
         e.preventDefault()
         const validationErrors = validate()
         if (Object.keys(validationErrors).length > 0) {
-            setErrors(validationErrors)
-            console.log(validationErrors)
+            setErrors(validationErrors)     
+            // signUp(formValues)
+            setShowErrorToggle(true)
+            
         } else {
             console.log('success submitting', formValues)
+            signUp(formValues)
+            setShowErrorToggle(true)
+
             setErrors({})
-            navigate('/movieapp')
+      
         }
+        setTimeout(()=>{
+            setShowErrorToggle(false)
+        },3000)
 
     }
     return (
-        <div className="flex items-center justify-center min-h-screen bg-black">
+        <div className="flex relative items-center justify-center min-h-screen bg-black">
             <div className="bg-white bg-opacity-10 p-6 rounded-lg shadow-md w-full max-w-md">
                 <h2 className="text-2xl font-bold text-center text-white">Sign Up</h2>
                 <form className="mt-4" onSubmit={handleSubmit}>
@@ -90,35 +100,46 @@ const Signup = () => {
                             className="w-full px-4 py-2 mt-2 border bg-inherit text-white rounded-lg focus:outline-none  focus:border-pink-600"
 
                         />
+
                         {errors.email && <p className='text-red-600 my-1'>{errors.email}</p>}
 
                     </div>
                     <div className="mb-4">
                         <label className="block text-white">Password</label>
-                        <input
-                            type="password"
-                            placeholder='add your Password'
-                            name='password'
-                            value={formValues.password}
-                            className="w-full px-4 py-2 mt-2 border bg-inherit text-white rounded-lg focus:outline-none  focus:border-pink-600"
-                            onChange={handlechange}
-                        />
+                        <div className='flex w-full px-4 py-2 mt-2 border bg-inherit text-white rounded-lg focus:outline-none  focus:border-pink-600'>
+
+                            <input
+                                type={isShowPassword ? 'text' : 'password'}
+                                placeholder='add your Password'
+                                name='password'
+                                value={formValues.password}
+                                className="w-full  bg-inherit focus:outline-none "
+                                onChange={handlechange}
+                            />
+                            <button type='button' onClick={() => { setIsShowPassword(prev => !prev) }}> {isShowPassword ? <Eye /> : <NoEye />}</button>
+
+                        </div>
                         {errors.password && <p className='text-red-600 my-1'>{errors.password}</p>}
 
                     </div>
                     <div className="mb-4">
                         <label className="block text-white">Confirm Password</label>
                         <input
-                            type="password"
+                            type={isShowPassword ? 'text' : 'password'}
+
                             placeholder='repeat your password'
                             name='confirmPassword'
                             value={formValues.confirmPassword}
-                            className="w-full px-4 py-2 mt-2 border bg-inherit text-white rounded-lg focus:outline-none  focus:border-pink-600"
+                            className='flex w-full px-4 py-2 mt-2 border bg-inherit text-white rounded-lg focus:outline-none  focus:border-pink-600'
                             onChange={handlechange}
                         />
+
+
+
                         {errors.confirmPassword && <p className='text-red-600 my-1'>{errors.confirmPassword}</p>}
 
                     </div>
+
                     <button
                         type="submit"
                         className="w-full px-4 py-2 mt-4 text-white bg-pink-600 rounded-lg hover:bg-pink-500"
@@ -134,6 +155,12 @@ const Signup = () => {
                 </p>
 
             </div>
+{/* apiError */}
+
+            {showErrorToggle &&
+            <div className='absolute left-10 bottom-16 h-10 flex items-center rounded-md  ra p-2 bg-pink-600 text-white'>
+{signUpError}
+            </div>}
 
         </div>
     );
