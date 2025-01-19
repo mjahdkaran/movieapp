@@ -49,7 +49,7 @@ export default function FilmCategories({ title }) {
         <div className=" scroll-container bg-black bg-opacity-95 text-white px-10 py-4">
             {/* عنوان دسته‌بندی */}
             <div className="flex justify-between">
-                <p className="font-medium text-2xl hover:text-pink-500 cursor-pointer"
+                <p className="font-bold text-2xl text-pink-400 hover:text-pink-500 cursor-pointer"
                     onClick={() => navigate('/movieapp/' + endpoint)}
                 >{title}</p>
                 <div className="flex items-center font-medium text-lg text-pink-500 hover:text-pink-600 cursor-pointer"
@@ -64,7 +64,7 @@ export default function FilmCategories({ title }) {
             </div>
 
             {/* نمایش فیلم‌ها */}
-            <div className="flex overflow-x-auto justify-start space-x-4 py-4">
+            <div className="flex overflow-x-auto justify-start space-x-4 py-4  ">
                 {isLoading ? (
                     <>
                         <p className='text-center'>Loading...</p>

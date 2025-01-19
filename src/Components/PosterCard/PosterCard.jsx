@@ -7,18 +7,16 @@ export default function PosterCard({ movieobj }) {
     const navigate = useNavigate()
     // ساخت آدرس کامل برای تصویر
     const imageUrl = backdrop_path
-        ? `https://image.tmdb.org/t/p/w500${backdrop_path}` // ترکیب URL پایه با مسیر تصویر
+        ? `http://65.109.177.24:2024/api/file/image?size=w500&imgPath=${backdrop_path}` // ترکیب URL پایه با مسیر تصویر
         : 'https://via.placeholder.com/500x750?text=No+Image'; // اگر تصویر وجود نداشت، یک تصویر پیش‌فرض نمایش می‌دهیم
 
     return (
         <div className='flex flex-col' onClick={() => navigate('/movieapp/m/' + id, { state: movieobj })}>
-            <div className="relative h-56 w-44 rounded-md ">
+            <div className="relative h-56 w-44 rounded-md  ">
 
                 {/* تصویر اصلی */}
                 <img
                     src={imageUrl}
-                    //{imageUrl}
-                    // "../Bad_Boys_for_Life_poster.jpg"
                     alt="Poster"
                     className="w-full h-full rounded-md object-cover"
                 />
@@ -34,7 +32,7 @@ export default function PosterCard({ movieobj }) {
 
 
             </div>
-            <p className='text-white font-bold my-2'> {title}</p>
+            <p className='text-white font-bold my-2 flex flex-wrap w-44 '> {title}</p>
         </div>
 
     );

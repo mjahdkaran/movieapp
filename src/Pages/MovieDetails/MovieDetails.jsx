@@ -1,27 +1,37 @@
 import React, { useEffect, useState } from 'react'
 import PageLayout from '../../Layout/PageLayout'
 import style from './MovieDetails.module.css'
-import { Download, Heart, Save } from '../../utils/icon'
+import { Back, Download, Heart, Save } from '../../utils/icon'
 import { useLocation } from 'react-router-dom'
 import { fetchGenreOfMovie } from '../../utils/api'
+import { useNavigate } from 'react-router-dom'
 
 export default function Movie() {
     const [isSaved, setIsSaved] = useState(false)
     const [isLiked, setIsLiked] = useState(false)
     const [allGenres, setAllGenres] = useState([])
     const [thisMovieGenre, setThisMovieGenre] = useState([])
-
+const navigate = useNavigate()
     // استفاده از اطلاعات ارسال شده از PosterCard
     const location = useLocation()
     const details = location.state
     const imageUrl = details.backdrop_path
-        ? `https://image.tmdb.org/t/p/w500${details.backdrop_path}`
+        ? `http://65.109.177.24:2024/api/file/image?size=w500&imgPath=${details.backdrop_path}`
         : 'https://via.placeholder.com/500x750?text=No+Image'
     const posterUrl = details.backdrop_path
-        ? `https://image.tmdb.org/t/p/original${details.poster_path}`
+        ? `http://65.109.177.24:2024/api/file/image?size=w500&imgPath=${details.poster_path}`
         : 'https://via.placeholder.com/500x750?text=No+Image'
 
+
+        // گرفتن عکس ها 
+        const getImage=async()=>{
+            const response= await fetch(`https://localhost:7015/api/file/image?size=original&${details.backdrop_path}`)
+           const data=await response.json()
+           console.log('data: ',data)
+        }
+
     // تطبیق ژانرها
+
     const matchGenres = () => {
         const movieGenres = details.genre_ids.map(id => {
             const genre = allGenres.find(genre => genre.id === id)
@@ -38,9 +48,10 @@ export default function Movie() {
             console.log('Error fetching genres:', error)
         }
     }
-
+ 
     useEffect(() => {
         fetchGenre()
+       console.log(imageUrl)
     }, [])
 
     useEffect(() => {
@@ -51,7 +62,13 @@ export default function Movie() {
 
     return (
         <PageLayout>
-            <div className='container flex justify-center bg-black h-screen'>
+            
+            <button className='text-pink-500 mt-24 ml-20  cursor-pointer hover:bg-pink-500 hover:rounded-full hover:text-white'
+                                onClick={()=>navigate(-1)} >
+                             
+                                    <Back/></button>  
+            <div className='container flex  justify-center bg-black h-screen '>
+            
                 <div className={`${style.Movie_summary} h-2/3 w-4/5 bg-[url('./70ebbb90317477.5e291ea97163e.jpg')]`} style={{ backgroundImage: `url(${posterUrl})` }}>
                     <div className='relative z-10'>
                         <div className='relative z-10 flex flex-col justify-start p-6 border-b md:flex-row '>
