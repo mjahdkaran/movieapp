@@ -5,6 +5,7 @@ import MovieDetails from './Pages/MovieDetails/MovieDetails';
 import CategoryPage from './Pages/CategoryPage/CategoryPage';
 import Login from './Pages/Auth/Login';
 import Signup from './Pages/Auth/Signup';
+import SearchPage from './Pages/SearchPage/SearchPage';
 export default function routes() {
     return (
         <Routes>
@@ -13,6 +14,8 @@ export default function routes() {
             <Route path='/movieapp/:category' element={<CategoryPage />} />
             <Route path="/movieapp/login" element={<Login />} />
             <Route path="/movieapp/signup" element={<Signup />} />
+            <Route path="/movieapp/search" element={<SearchPage/>} />
+
 
         </Routes>
     )

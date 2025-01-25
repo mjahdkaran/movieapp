@@ -4,15 +4,20 @@ import Signup from '../Pages/Auth/Signup'
 const AuthContext = createContext()
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
+    const [token, setToken] = useState(null)
     const [loginError, setLoginError] = useState()
     const [signUpError, setSignUpError] = useState()
     const navigate = useNavigate()
 
 
     useEffect(() => {
-        let saveUser = localStorage.getItem('saveUser')
-        if (saveUser) {
-            setUser(saveUser)
+        let token = localStorage.getItem('token')
+        
+        
+        if (token) {
+            setUser(localStorage.getItem('saveUser'))
+            setToken(token)
+            
         }
     }, [])
 
@@ -96,7 +101,7 @@ export const AuthProvider = ({ children }) => {
 
 
 
-        <AuthContext.Provider value={{ user, setLoginError, loginError, logIn, signUp ,signUpError,logout,getToken}}>
+        <AuthContext.Provider value={{ user, setLoginError, loginError, logIn, signUp ,signUpError,logout,getToken,token}}>
             {children}
         </AuthContext.Provider>
     )

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Movie, Search } from '../../utils/icon'
 import { useAuth } from '../../Context/AuthContext'
-import { useNavigate } from 'react-router-dom'
+import {  useNavigate } from 'react-router-dom'
 
 export default function Header() {
     const { user, logout } = useAuth()
@@ -17,19 +17,24 @@ export default function Header() {
     return (
         <div className='fixed top-0 z-50 w-full p-1    md:p-4 flex  justify-between bg-black bg-opacity-90 text-white' >
             <div className='flex'>
-                <div className='flex  items-center border-e-2 border-gray-400'>
+                <div className='flex  items-center border-e-2 border-gray-400'
+                onClick={()=>navigate('/movieapp')}>
                     <span className='text-pink-600'><Movie /></span>
                     <p className='font-normal md:font-bold md:text-lg m-1  md:m-2 ' >MovieLand</p>
                 </div>
-                <div className='flex  items-center mx-3 text-white hover:text-pink-600 '>
+                <div
+                onClick={()=>(navigate('/movieapp/search'))}
+                className='flex  items-center mx-3 text-white hover:text-pink-600  '>
+
                     <Search />
+                   <p className='ml-2'>Search</p>
 
                 </div>
             </div>
 
             <div className='flex items-center'>
 
-                <div className='flex items-center mx-1'>
+                <div className='flex items-center mx-4'>
                     <p>About</p>
                 </div>
                 <button className={`rounded-lg  ${user ? 'bg-gray-700 hover:bg-gray-600' : 'bg-pink-700 hover:bg-pink-800'}  h-8 px-1  text-md `}

@@ -69,9 +69,9 @@ const navigate = useNavigate()
                                     <Back/></button>  
             <div className='container flex  justify-center bg-black h-screen '>
             
-                <div className={`${style.Movie_summary} h-2/3 w-4/5 bg-[url('./70ebbb90317477.5e291ea97163e.jpg')]`} style={{ backgroundImage: `url(${posterUrl})` }}>
+                <div className={`${style.Movie_summary} h-2/3 w-4/5 bg-[url('./70ebbb90317477.5e291ea97163e.jpg')] `} style={{ backgroundImage: `url(${posterUrl})` }}>
                     <div className='relative z-10'>
-                        <div className='relative z-10 flex flex-col justify-start p-6 border-b md:flex-row '>
+                        <div className='relative z-10 flex flex-col justify-start p-6 border-b md:flex-row  '>
                             <div className='h-80 w-60 rounded-md'>
                                 <img className='rounded-md h-full w-full object-cover' src={imageUrl} alt="" />
                             </div>

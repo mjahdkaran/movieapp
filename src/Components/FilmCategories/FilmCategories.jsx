@@ -22,24 +22,15 @@ export default function FilmCategories({ title }) {
         const fetchMovies = async () => {
             try {
                 setIsLoading(true);
-
-                // نقشه‌دهی عنوان به مسیر API
-
-
-                // ارسال درخواست به API
                 const data = await fetchMovieByCategory(endpoint, 1)
-                // console.log(data)
-                // ذخیره داده‌ها
                 let sliceData = data.slice(0, 6)
                 setMovies(sliceData);
-                // console.log(data)
             } catch (error) {
                 console.error('Error fetching movies:', error);
             } finally {
                 setIsLoading(false);
             }
         };
-
 
         fetchMovies();
 
