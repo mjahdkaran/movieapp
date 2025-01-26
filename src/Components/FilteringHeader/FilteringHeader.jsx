@@ -1,17 +1,39 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Filter } from '../../utils/icon';
 import FilteringInput from './FilteringInput/FilteringInput';
-const FILTER_OPTIONS = [
-    { category: 'country', values: ['all', 'Iran', 'USA', 'Korea', 'China'] },
-    { category: 'age', values: ['all', '6-10', '12-17', '18+'] },
-    { category: 'language', values: ['all', 'Persian', 'Original'] },
-    { category: 'film', values: ['all', 'movie', 'series', 'Television show'] },
-];
+import { fetchLanguages,fetchGenreOfMovie } from '../../utils/api';
+
+
+
+
 export default function FilteringHeader() {
     const [showFilters, setShowFilters] = useState(false);
     const [itemsFilter, setItemsFilter] = useState({}); // Object to store both temporary and applied filters
     const [tempItemsFilter, setTempItemsFilter] = useState({})
+    const [languages, setLanguages] = useState([])
+    const[genres,setGenres] = useState([])
 
+
+    useEffect(() => {
+        const loadLanguages = async () => {
+            const getlanguage = await fetchLanguages()
+            setLanguages(getlanguage)
+        }
+        const LoadGenres=async()=>{
+            const getGenres= await fetchGenreOfMovie()
+            setGenres(getGenres)     }
+        
+        loadLanguages()
+LoadGenres()    
+    }, [])
+   
+
+    const FILTER_OPTIONS = [
+        // { category: 'country', values: ['all', 'Iran', 'USA', 'Korea', 'China'] },
+        // { category: 'age', values: ['all', '6-10', '12-17', '18+'] },
+        { category: 'language', values: ['all', ...languages.map(lang=>lang.name)] },
+        { category: 'Genre', values: ['all',...genres.map(gen=>gen.name)] },
+    ];
     const handleFilter = (filterCategory, filterValue) => {
         setTempItemsFilter((prev) => ({
             ...prev,

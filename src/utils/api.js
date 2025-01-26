@@ -31,10 +31,40 @@ try{
             language:'en'
         }
     })
+    console.log(response.data.genres)
     return response.data.genres || []
 }
 catch(error){
 console.log(`error fetching movie genre:`,error);
 return []
 }
+}
+
+
+
+export const fetchLanguages=async()=>{
+    try {
+        const response=await ApiClient.get('/configuration/languages ',{  headers: {
+            'Accept': 'application/json'  // اضافه کردن هدر Accept
+        }})
+ return response.data.map(lang=>({name:lang.english_name,code:lang.iso_639_1}))
+    } catch (error) {
+        console.error('somthing is wrong',error)
+        return[]
+    }
+}
+
+
+
+
+
+export const matchGenres = async (details) => {
+    const allGenres = await fetchGenreOfMovie();  // صبر کردن تا نتیجه ژانرها گرفته شود
+    const movieGenres = details.genre_ids.map(id => {
+        const genre = allGenres.find(genre => genre.id === id); // جستجو برای ژانر بر اساس id
+        return genre ? genre.name : null;  // برگشت نام ژانر یا null اگر پیدا نشد
+    });
+    
+    // فیلتر کردن ژانرهای معتبر (یعنی غیر از null)
+    return movieGenres.filter(genre => genre !== null);
 }

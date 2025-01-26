@@ -37,7 +37,7 @@ const navigate=useNavigate()
 
     return (
         <PageLayout>
-            <FilteringHeader />
+            {/* <FilteringHeader /> */}
             <div className='flex pl-5  flex-col h-screen bg-blyeack mt-20'>
                 <div className='border-b-2   border-pink-700'>
                     <button className='text-pink-500  cursor-pointer hover:bg-pink-500 hover:rounded-full hover:text-white'

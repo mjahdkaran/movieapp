@@ -8,7 +8,7 @@ export default function Movies() {
         <div className='containern'>
 
             <PageLayout>
-                <FilteringHeader />
+                {/* <FilteringHeader /> */}
 
                 <div className='mt-20 ' >
                     <FilmCategories title='up coming' />

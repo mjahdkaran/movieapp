@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, {  useState } from 'react';
 
 import { Eye, NoEye } from '../../utils/icon';
 import { useAuth } from '../../Context/AuthContext';
