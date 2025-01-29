@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PageLayout from '../../Layout/PageLayout';
 import { Search } from '../../utils/icon';
-import axios, { all } from 'axios';
-import PosterCard from '../../Components/PosterCard/PosterCard';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { fetchGenreOfMovie } from '../../utils/api';
 import { useDebounce } from '../../utils/Hooks/useDebounce.jsx';
@@ -93,7 +92,7 @@ export default function SearchPage() {
                         movies.map((movie) => (
 
                             <li key={movie.id} className='flex border-b border-gray-500 p-4'
-                                onClick={() => navigate('/movieapp/m/' + movie.id, { state: movie })}
+                                onClick={() => navigate('/m/' + movie.id, { state: movie })}
                             >
                                 <img className='w-28 h-40 min-w-28 object-cover rounded-md'
                                     src={`http://65.109.177.24:2024/api/file/image?size=w500&imgPath=${movie.backdrop_path}`} alt=" Posther" />

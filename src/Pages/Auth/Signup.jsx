@@ -149,7 +149,7 @@ const Signup = () => {
                 </form>
                 <p className="mt-4 text-sm text-white text-center">
                     Already have an account?
-                    <a href="/movieapp/login" className="text-pink-500 mx-4 hover:underline">
+                    <a href="/login" className="text-pink-500 mx-4 hover:underline">
                         login now
                     </a>
                 </p>

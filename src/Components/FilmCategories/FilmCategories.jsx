@@ -41,10 +41,10 @@ export default function FilmCategories({ title }) {
             {/* عنوان دسته‌بندی */}
             <div className="flex justify-between">
                 <p className="font-bold text-2xl text-pink-400 hover:text-pink-500 cursor-pointer"
-                    onClick={() => navigate('/movieapp/' + endpoint)}
+                    onClick={() => navigate('/' + endpoint)}
                 >{title}</p>
                 <div className="flex items-center font-medium text-lg text-pink-500 hover:text-pink-600 cursor-pointer"
-                    onClick={() => navigate('/movieapp/' + endpoint, { state: title })}
+                    onClick={() => navigate('/' + endpoint, { state: title })}
                 >
 
                     See All

@@ -68,7 +68,7 @@ const Login = () => {
                 </form>
                 <p className="mt-4 text-sm text-white text-center">
                     Don't have an account?
-                    <a href="/movieapp/signup" className="text-pink-500 hover:underline mx-4">
+                    <a href="/signup" className="text-pink-500 hover:underline mx-4">
                         signup
                     </a>
                 </p>

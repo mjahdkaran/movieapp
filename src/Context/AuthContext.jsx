@@ -1,6 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import Signup from '../Pages/Auth/Signup'
 const AuthContext = createContext()
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
@@ -15,7 +14,7 @@ export const AuthProvider = ({ children }) => {
         
         
         if (token) {
-            setUser(localStorage.getItem('saveUser'))
+            setUser(localStorage.getItem('userName'))
             setToken(token)
             
         }
@@ -44,11 +43,12 @@ export const AuthProvider = ({ children }) => {
             const data = await response.json()
             if (data) {
                 window.localStorage.setItem('token', data)
+                window.localStorage.setItem('userName', formValues.username); 
                 setUser(formValues.username)
                 setSignUpError('')
             }
             setUser(formValues.username)
-            navigate('/movieapp')
+            navigate('/')
 
         } catch (error) {
             setSignUpError(error.message || 'Something went wrong during registration')
@@ -77,8 +77,9 @@ export const AuthProvider = ({ children }) => {
             const data = await response.json()
             if (data) {
                 window.localStorage.setItem('token', data)
+                window.localStorage.setItem('userName', formValues.username); 
                 setUser(formValues.username)
-                navigate('/movieapp')
+                navigate('/')
 
             }
         } catch (error) {
@@ -90,7 +91,8 @@ export const AuthProvider = ({ children }) => {
 
     const logout = () => {
         setUser(null)
-        localStorage.removeItem('username')
+        localStorage.removeItem('userName')
+        localStorage.removeItem('token');
     }
 
     const getToken=() => {

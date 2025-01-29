@@ -6,15 +6,17 @@ import CategoryPage from './Pages/CategoryPage/CategoryPage';
 import Login from './Pages/Auth/Login';
 import Signup from './Pages/Auth/Signup';
 import SearchPage from './Pages/SearchPage/SearchPage';
+import FallBackComponent from './Pages/Error';
 export default function routes() {
     return (
         <Routes>
-            <Route path='/movieapp' element={<Movies />} />
-            <Route path="/movieapp/m/:id" element={<MovieDetails />} />
-            <Route path='/movieapp/:category' element={<CategoryPage />} />
-            <Route path="/movieapp/login" element={<Login />} />
-            <Route path="/movieapp/signup" element={<Signup />} />
-            <Route path="/movieapp/search" element={<SearchPage/>} />
+            <Route path='' element={<Movies />} />
+            <Route path="/m/:id" element={<MovieDetails />} />
+            <Route path='/:category' element={<CategoryPage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/search" element={<SearchPage />} />
+            <Route path="*" element={<FallBackComponent />} />
 
 
         </Routes>
