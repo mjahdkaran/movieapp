@@ -7,6 +7,9 @@ import Login from './Pages/Auth/Login';
 import Signup from './Pages/Auth/Signup';
 import SearchPage from './Pages/SearchPage/SearchPage';
 import FallBackComponent from './Pages/Error';
+// import FavoriteMovieList from './Pages/FavoriteMovieList/FavoriteMovieList';
+import WhatchList from './Pages/WhatchList/WhatchList';
+import FavoriteList from './Pages/FavoriteList/FavoriteList';
 export default function routes() {
     return (
         <Routes>
@@ -16,7 +19,10 @@ export default function routes() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/search" element={<SearchPage />} />
+            <Route path="/watchlist" element={<WhatchList />} />
+            <Route path="/liked" element={<FavoriteList />} />
             <Route path="*" element={<FallBackComponent />} />
+
 
 
         </Routes>

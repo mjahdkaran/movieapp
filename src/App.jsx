@@ -17,10 +17,7 @@ function App() {
       console.error('خطای رخ‌داده:', error, info);
       // ارسال اطلاعات خطا به سرور
     }}
-    // onReset={()=>{ 
-    //   // window.location.href = '/movieapp';
-    //   console.log('error')
-    //   }}
+  
       >
 
         <AuthProvider>

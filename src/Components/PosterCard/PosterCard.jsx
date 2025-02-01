@@ -11,7 +11,7 @@ export default function PosterCard({ movieobj }) {
         : 'https://via.placeholder.com/500x750?text=No+Image'; // اگر تصویر وجود نداشت، یک تصویر پیش‌فرض نمایش می‌دهیم
 
     return (
-        <div className='flex flex-col' onClick={() => navigate('/m/' + id, { state: movieobj })}>
+        <div className='flex flex-col mr-4' onClick={() => navigate('/m/' + id, { state: movieobj })}>
             <div className="relative h-56 w-44 rounded-md  ">
 
                 {/* تصویر اصلی */}

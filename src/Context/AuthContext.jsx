@@ -14,8 +14,8 @@ export const AuthProvider = ({ children }) => {
         
         
         if (token) {
-            setUser(localStorage.getItem('userName'))
             setToken(token)
+            setUser(localStorage.getItem('userName'))
             
         }
     }, [])
@@ -97,6 +97,7 @@ export const AuthProvider = ({ children }) => {
 
     const getToken=() => {
         let token=localStorage.getItem('token')
+    
         return token
     }
     return (

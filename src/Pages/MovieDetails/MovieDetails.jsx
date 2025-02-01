@@ -17,30 +17,37 @@ export default function Movie() {
     // استفاده از اطلاعات ارسال شده از PosterCard
     const location = useLocation()
     const details = location.state
-    const imageUrl = details.backdrop_path
-        ? `http://65.109.177.24:2024/api/file/image?size=w500&imgPath=${details.backdrop_path}`
-        : 'https://via.placeholder.com/500x750?text=No+Image'
-    const posterUrl = details.backdrop_path
-        ? `http://65.109.177.24:2024/api/file/image?size=w500&imgPath=${details.poster_path}`
-        : 'https://via.placeholder.com/500x750?text=No+Image'
+    const imageUrl = details.backdrop_path&&`http://65.109.177.24:2024/api/file/image?size=w500&imgPath=${details.backdrop_path}`
+    
+    const posterUrl = details.backdrop_path && `http://65.109.177.24:2024/api/file/image?size=w500&imgPath=${details.poster_path}`
+
+
 
     useEffect(() => {
         const fetchData = async () => {
+            console.log(location.params)
             try {
                 const genres = await fetchGenreOfMovie();
                 setAllGenres(genres);
-                const isMovieSaved = await checkSavedMovie(token, details.id);
-                setIsSaved(isMovieSaved);
-                const isMovieLiked= await checkLikedMovie(token, details.id);
-                setIsLiked(isMovieLiked);
+                setThisMovieGenre(details?.genre_ids?.map(id => genres.find(genre => genre.id === id)?.name).filter(Boolean))
+               
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         };
 
         fetchData();
-    }, [token, details.id]);
+    }, [token, details?.id, details?.genre_ids]);
 
+    useEffect(()=>{
+        const fetchData=async()=>{
+            const isMovieSaved = await checkSavedMovie(token, details.id);
+            setIsSaved(isMovieSaved);
+            const isMovieLiked= await checkLikedMovie(token, details.id);
+            setIsLiked(isMovieLiked);
+        }
+        fetchData()
+    },[token, details?.id])
 
     const saveMovie = async () => {
         try {
@@ -63,13 +70,7 @@ export default function Movie() {
             console.error('Failed to remove movie:', error);
         }
     }
-    const matchGenres = () => {
-        const movieGenres = details.genre_ids.map(id => {
-            const genre = allGenres.find(genre => genre.id === id)
-            return genre ? genre.name : null
-        })
-        setThisMovieGenre(movieGenres.filter(genre => genre !== null)) // فقط ژانرهای معتبر
-    }
+ 
 
 
     const likeMovie = async () => {
@@ -94,11 +95,7 @@ console.error('failed to remove liked Movie',error)
 
     }
 
-    useEffect(() => {
-        if (allGenres.length > 0 && details.genre_ids.length > 0) {
-            matchGenres()
-        }
-    }, [allGenres, details.genre_ids])
+  
 
     return (
         <PageLayout>

@@ -24,6 +24,19 @@ export  const fetchMovieByCategory=async(category,page=1)=>{
     }
     
 }
+//گرفتن جزئیات هر فیلم با آی دی 
+export  const fetchMovieById=async(movieId)=>{
+    try {
+        const response= await axios.get(`https://api.themoviedb.org/3/movie/${movieId}?language=en-US`,{
+            headers:{'content-type': 'application/json',
+                Authorization:API_KEY
+            }
+        })
+        return response.data||{}
+    } catch (error) {
+        console.error('fetchMovieById error')
+    }
+}
 
 export const fetchGenreOfMovie=async()=>{
 try{
@@ -32,7 +45,7 @@ try{
             language:'en'
         }
     })
-    console.log(response.data.genres)
+
     return response.data.genres || []
 }
 catch(error){
@@ -58,7 +71,7 @@ export const fetchLanguages=async()=>{
 // این درخواست برای بررسی ذخیره بودن فیلم در پلی‌لیست است
 export const  checkSavedMovie=async(token,movieId)=>{
 try{
-    const response=await axios.get(`${API_Base_URL_AMIR}playlist/1/movies`,{  headers: {
+    const response=await axios.get(`${API_Base_URL_AMIR}playlist/2/movies`,{  headers: {
         'authorization': `Bearer ${token}`,
     },
 });
@@ -68,6 +81,19 @@ return response.data.includes(movieId)
     throw error;
 }
 }
+//گرفتن لیست پلی لیست
+export const  getPlayList=async(token)=>{
+    try{
+        const response=await axios.get(`${API_Base_URL_AMIR}playlist/2/movies`,{  headers: {
+            'authorization': `Bearer ${token}`,
+        },
+    });
+    return response.data
+    }catch(error){ 
+        console.error('Error getting playList :', error);
+        throw error;
+    }
+    }
 //این درخواست برای اضافه کردن فیلم به پلی لیست است
 export const  saveMovieToPlaylist=async(token,movieId)=>{
     try {
@@ -78,7 +104,7 @@ export const  saveMovieToPlaylist=async(token,movieId)=>{
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                playListId: 1,
+                playListId: 2,
                 movieId: movieId
             })
         })
@@ -99,7 +125,7 @@ export const removeMovieFromPlaylist = async (token,movieId) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                playListId: 1,
+                playListId: 2,
                 movieId: movieId
             })
         })
@@ -109,13 +135,39 @@ export const removeMovieFromPlaylist = async (token,movieId) => {
         throw error;
     }
 }
+//این درخواست برای بررسی فیلم های لایک شده است
+export const  checkLikedMovie=async(token,movieId)=>{
+    try {
+        const response= await axios.get(`${API_Base_URL_AMIR}playlist/1/movies`,{
+            headers:{
+                Authorization:`Bearer ${token}`
+            }
+        });
+        return response.data.includes(movieId)
+    } catch (error) {
+        console.error('Failed to check Liked movie',error);
+        throw error;
+    }
+}
 
-
+// این درخواست برای گرفتن لیست فیلم های لایک شده است 
+export const  getLikedList=async(token)=>{
+    try{
+        const response=await axios.get(`${API_Base_URL_AMIR}playlist/1/movies`,{  headers: {
+            'authorization': `Bearer ${token}`,
+        },
+    });
+    return response.data
+    }catch(error){ 
+        console.error('Error getting LikedList :', error);
+        throw error;
+    }
+    }
 //این درخواست برای اضفافه شدن فیلم به پلی لیست لایک شده ها است 
 export const saveMovieToLikedList=async(token,movieId)=>{
 try {
     const response=await axios.post(`${API_Base_URL_AMIR}playlist/import-movie`,{
-        playListId:2,
+        playListId:1,
         movieId:movieId
     },
 {headers:{
@@ -135,7 +187,7 @@ return response.status===200
 export const removeMovieFromLikedList=async(token,movieId)=>{
     try {
         const response=await axios.post(`${API_Base_URL_AMIR}playlist/remove-movie`,{
-            playListId:2,
+            playListId:1,
             movieId:movieId
         },
     {headers:{
@@ -150,17 +202,4 @@ export const removeMovieFromLikedList=async(token,movieId)=>{
         throw error;
     }
     
-    }
-    export const  checkLikedMovie=async(token,movieId)=>{
-        try {
-            const response= await axios.get(`${API_Base_URL_AMIR}playlist/2/movies`,{
-                headers:{
-                    Authorization:`Bearer ${token}`
-                }
-            });
-            return response.data.includes(movieId)
-        } catch (error) {
-            console.error('Failed to check Liked movie',error);
-            throw error;
-        }
     }

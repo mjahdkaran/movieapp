@@ -40,7 +40,8 @@ export default function Header() {
                         className='flex  items-center mx-3 text-white hover:text-pink-600  '>
 
                         <Search />
-                        <p className='ml-2'>Search</p>
+
+                        <p className='ml-2 hidden sm:block'>Search</p>
 
                     </div>}
 
@@ -90,9 +91,9 @@ export default function Header() {
                     onMouseLeave={()=>setIsShowMenu(false)}
                      className=' bg-gray-950 shadow-sm shadow-gray-700 absolute top-16 right-6 h-52 w-36 py-3'>
                         <ul className=' h-full flex flex-col justify-evenly '>
-                            <li className='hover:bg-pink-700 transition-all hover:text-with px-3  py-1'> profile</li>
-                            <li className='hover:bg-pink-700 transition-all  hover:text-with px-3 py-1'>Favorite   </li>
-                            <li className='hover:bg-pink-700 transition-all  hover:text-with px-3 py-1'> WatchList</li>
+                            <li className='hover:bg-pink-700 transition-all hover:text-with px-3  py-1' > profile</li>
+                            <li className='hover:bg-pink-700 transition-all  hover:text-with px-3 py-1' onClick={()=>navigate('/WatchList')}>WatchList  </li>
+                            <li className='hover:bg-pink-700 transition-all  hover:text-with px-3 py-1' onClick={()=>navigate('/liked')}> Favorite </li>
                         </ul>
                     </div>}
 
@@ -102,3 +103,6 @@ export default function Header() {
         </div >
     )
 }
+
+//Bugs-Error
+//مشکل عدم نمایش عکس پروفایل در صفحه اصلی
