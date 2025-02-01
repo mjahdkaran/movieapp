@@ -10,9 +10,9 @@ export default function WhatchList() {
     const { token } = useAuth()
     const [playListArr, setPlayListArr] = useState([])
     const [movieDetailsArr, setMovieDetailsArr] = useState([])
-  
+
     const navigate = useNavigate()
-// گرفتن پلی لیست
+    // گرفتن پلی لیست
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -45,7 +45,7 @@ export default function WhatchList() {
 
 
     const removeMovie = async (movieid, e) => {
-        e.stopPropagation();  
+        e.stopPropagation();
         try {
             await removeMovieFromPlaylist(token, movieid);
             // حذف فیلم از آرایه پس از موفقیت در حذف از سرور
@@ -54,7 +54,7 @@ export default function WhatchList() {
             console.error('Failed to remove movie:', error);
         }
     };
-    
+
 
     return (
         <PageLayout>
@@ -62,7 +62,8 @@ export default function WhatchList() {
 
                 <div className=' flex  mt-20 px-10 py-6  text-white  font-mono font-bold text-sm '>
                     <p className='mr-9 p-2 bg-pink-800 border border-pink-600  rounded-md  cursor-pointer'>Whatch List</p>
-                    <p className=' border border-pink-600 rounded-md  p-2 cursor-pointer '>Favorite List</p>
+                    <p className=' border border-pink-600 rounded-md  p-2 cursor-pointer hover:text-pink-800  '
+                     onClick={() => navigate('/liked')} >Favorite List</p>
                 </div>
 
 
@@ -73,7 +74,8 @@ export default function WhatchList() {
 
                         <div key={movie.id} className='  relative w-32 sm:w-60  rounded-md m-5 mb-20  overflow-hidden'
                             onClick={() => {
-                                navigate('/m/' + movie.id, { state: movie })}}
+                                navigate('/m/' + movie.id, { state: movie.id })
+                            }}
                         >
                             <div className='w-full h-32 md:h-80 object-cover  '>
                                 <img src={`http://65.109.177.24:2024/api/file/image?size=w500&imgPath=${movie.backdrop_path}`} alt=""
@@ -86,9 +88,9 @@ export default function WhatchList() {
                              md:py-2 md:px-3 md:h-20 md:text-lg'>
                                 <p className='flex flex-wrap w-5/6 '>{movie.title}</p>
                                 <button className='hover:bg-pink-300 rounded-full'
-                               onClick={(e) => {
-                                    removeMovie(movie.id, e);  // پاس دادن e به removeMovie
-                                }}
+                                    onClick={(e) => {
+                                        removeMovie(movie.id, e);  // پاس دادن e به removeMovie
+                                    }}
                                 ><Trash /></button>
 
                             </div>
