@@ -99,7 +99,7 @@ export default function SearchPage() {
                             >
                                 <img className=' w-full md:w-28 h-40 min-w-28 object-cover rounded-md
                                 '
-                                    src={`http://65.109.177.24:2024/api/file/image?size=w500&imgPath=${movie.backdrop_path}`} alt=" Posther" />
+                                    src={`http://65.109.177.24:2024/api/file/image?size=w500&imgPath=${movie.backdrop_path}`} alt=" Poster" />
                                 <div className='p-2'>
                                     <p className='font-bold text-md md:text-lg'> {movie.title} - <span className='text-sm md:text-md font-normal'>({movie.original_title}) - {movie.release_date}</span> </p>
                                     <div className='my-3 flex flex-wrap'>

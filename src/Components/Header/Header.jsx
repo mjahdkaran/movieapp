@@ -45,7 +45,7 @@ export default function Header() {
             <div className='flex'>
                 <div className='flex items-center border-e-2 border-gray-400' onClick={() => navigate('/')}>
                     <span className='text-pink-600'><Movie /></span>
-                    <p className='font-normal text-sm md:font-bold md:text-lg m-1 md:m-2'>MovieScope</p>
+                    <p className=' text-sm font-bold md:text-lg m-1 md:m-2'>MovieScope</p>
                 </div>
 
                 {location.pathname !== '/search' && (

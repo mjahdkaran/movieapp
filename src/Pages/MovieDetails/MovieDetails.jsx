@@ -119,6 +119,7 @@ export default function Movie() {
                             <p>
                                 <span className="text-lg font-bold text-pink-600 mr-2">Film:</span> {details.title}
                             </p>
+                            <p className='my-2'><span className='font-bold  text-pink-500'>IMDB  : </span>   {details.vote_average.toFixed(1).replace(/\.0$/, '')} <span className='text-gray-500'>/10</span></p>
                             <p>{details.adult ? 'Suitable for over 18 years old.' : 'Suitable for all ages'}</p>
                             <p>
                                 <span className="text-lg font-bold text-pink-600 mr-2">Story Overview:</span>
@@ -135,26 +136,29 @@ export default function Movie() {
                        </div>
                         <div className="flex mt-3 p-3  ">
                         <button
-                            className={`flex items-center rounded-3xl text-sm font-medium w-20 h-8 p-2 m-1 ${
+                            className={`flex items-center rounded-3xl text-sm font-medium md:w-20 h-8 p-2 m-1 ${
                                 isSaved ? 'border-2 border-pink-600 text-pink-600' : 'bg-white bg-opacity-30 text-white'
                             }`}
                             onClick={isSaved ? removeMovie : saveMovie}
                         >
                             <Save fill={isSaved} />
-                            Save
+                            <span className='hidden md:inline-block'> Save</span>
+                           
                         </button>
                         <button
-                            className={`flex items-center rounded-3xl text-sm font-medium w-20 h-8 p-2 m-1 ${
+                            className={`flex items-center rounded-3xl text-sm font-medium md:w-20 h-8 p-2 m-1 ${
                                 isLiked ? 'border-2 border-pink-600 text-pink-600' : 'bg-white bg-opacity-30 text-white'
                             }`}
                             onClick={isLiked ? unLikeMovie : likeMovie}
                         >
                             <Heart fill={isLiked} />
-                            Like
+                            <span className='hidden md:inline-block'>Like</span>
+                            
                         </button>
-                        <button className="flex items-center bg-white bg-opacity-30 text-white rounded-3xl text-sm w-28 h-8 p-2 m-1">
+                        <button className="flex items-center bg-white bg-opacity-30 text-white rounded-3xl text-sm md:w-28 h-8 p-2 m-1">
                             <Download />
-                            Download
+                            <span className='hidden md:inline-block'>Download</span>
+                            
                         </button>
                     </div>
                     </div>
