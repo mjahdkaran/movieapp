@@ -27,12 +27,12 @@ export default function Header() {
     }
 
     return (
-        <div className='fixed top-0 z-50 w-full p-1    md:p-4 flex  justify-between bg-black bg-opacity-90 text-white ' >
+        <div className='fixed top-0 z-50 w-full p-1    md:p-4 flex  justify-between bg-black bg-opacity-90 text-white font-mono' >
             <div className='flex'>
                 <div className='flex  items-center border-e-2 border-gray-400'
                     onClick={() => navigate('/')}>
                     <span className='text-pink-600'><Movie /></span>
-                    <p className='font-normal md:font-bold md:text-lg m-1  md:m-2 ' >MovieLand</p>
+                    <p className='font-normal text-sm md:font-bold md:text-lg m-1  md:m-2 font-mono ' >MovieScope</p>
                 </div>
                 {!isSearchPage &&
                     <div
@@ -41,7 +41,7 @@ export default function Header() {
 
                         <Search />
 
-                        <p className='ml-2 hidden sm:block'>Search</p>
+                        <p className='ml-2 hidden sm:block ' >Search</p>
 
                     </div>}
 
@@ -49,10 +49,10 @@ export default function Header() {
 
             <div className='flex items-center'>
 
-                <div className='flex items-center mx-4'>
+                <div className='flex items-center text-sm md:text-lg mx-4'>
                     <p>About</p>
                 </div>
-                <button className={`rounded-lg  ${isLogedIn ? 'bg-gray-700 hover:bg-gray-600' : 'bg-pink-700 hover:bg-pink-800'}  h-8 px-1  text-md `}
+                <button className={`rounded-lg  ${isLogedIn ? 'bg-gray-700 hover:bg-gray-600' : 'bg-pink-700 hover:bg-pink-800'}  h-8 px-1  text-sm md:text-lg `}
                     onClick={clickeHandler}>{isLogedIn ? 'logout' : 'Login'}</button>
 
                 {isLogedIn &&

@@ -79,7 +79,7 @@ export default function SearchPage() {
                     <Search />
                     <input
                         type="text"
-                        placeholder='write the name of movie or series'
+                        placeholder='write the name of movie or series '
                         className='w-full bg-inherit outline-none px-2'
                         value={query}
                         onChange={handleSearchChange}
@@ -92,7 +92,7 @@ export default function SearchPage() {
                         movies.map((movie) => (
 
                             <li key={movie.id} className='flex border-b border-gray-500 p-4'
-                                onClick={() => navigate('/m/' + movie.id, { state: movie })}
+                                onClick={() => navigate('/m/' + movie.id, { state: movie.id })}
                             >
                                 <img className='w-28 h-40 min-w-28 object-cover rounded-md'
                                     src={`http://65.109.177.24:2024/api/file/image?size=w500&imgPath=${movie.backdrop_path}`} alt=" Posther" />
