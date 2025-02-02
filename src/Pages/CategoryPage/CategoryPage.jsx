@@ -49,8 +49,8 @@ const navigate=useNavigate()
                 </div>
 
                 {!isLoading ? (
-                    <div className='flex-1 flex flex-wrap justify-start space-x-4 py-5 px-3  '>
-                        {allMovies.map((movie, index) => <PosterCard key={`${movie.id}-${index}`} movieobj={movie} />)}
+                    <div className='flex-1 flex flex-wrap justify-center md:justify-start space-x-4 py-5 px-3  '>
+                        {allMovies.map((movie, index) => <PosterCard key={`${movie.id}-${index}`} movieobj={movie} width='w-full'/>)}
 
                     </div>
                 ) :

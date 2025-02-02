@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export default function PosterCard({ movieobj }) {
+export default function PosterCard({ movieobj,width='w-44' }) {
     const { adult, backdrop_path, genre_ids, id, original_language, original_title, popularity, poster_path,
         release_date, title, vote_average } = movieobj
     const navigate = useNavigate()
@@ -12,7 +12,7 @@ export default function PosterCard({ movieobj }) {
 
     return (
         <div className='flex flex-col mr-4' onClick={() => navigate('/m/' + id, { state: movieobj.id })}>
-            <div className="relative h-56 w-44 rounded-md  ">
+            <div className={`relative h-56 ${width} md:h-56 md:w-44 rounded-md   `}>
 
                 {/* تصویر اصلی */}
                 <img
@@ -32,7 +32,7 @@ export default function PosterCard({ movieobj }) {
 
 
             </div>
-            <p className='text-white font-bold my-2 flex flex-wrap w-44 '> {title}</p>
+            <p className={`text-white font-bold my-2 flex flex-wrap justify-center ${width} md:w-44`} > {title}</p>
         </div>
 
     );
