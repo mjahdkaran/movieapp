@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PageLayout from '../../Layout/PageLayout';
 import { Search } from '../../utils/icon';
 import axios from 'axios';
@@ -9,6 +9,7 @@ import { useDebounce } from '../../utils/Hooks/useDebounce.jsx';
 const API_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5NjQ5MjcxOTA3ZGE1NzQ3MWYzZDY5MDc2OTQzMDMzNCIsIm5iZiI6MTczMjgxODkxOS4yODcwMDAyLCJzdWIiOiI2NzQ4YjdlNzE5OTJkNzEwZDNhY2JlNmQiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.Eu9JxWvD7U5Y34dHgMC9JpHHtbeI9NJgZAnz7oa1spY';
 
 export default function SearchPage() {
+    const searchInputRef = useRef(null)
     const [query, setQuery] = useState('');
     const [movies, setMovies] = useState([]);
     const [defaultGenres, setDefaultGenres] = useState([]);
@@ -16,6 +17,7 @@ export default function SearchPage() {
     const debounceQuery = useDebounce(query, 500);
 
     const navigate = useNavigate()
+    if (searchInputRef.current) { searchInputRef.current.focus() }
     useEffect(() => {
         const fetcheGenres = async () => {
             try {
@@ -78,6 +80,7 @@ export default function SearchPage() {
                 <div className='flex border-b p-2 w-full lg:w-1/3'>
                     <Search />
                     <input
+                        ref={searchInputRef}
                         type="text"
                         placeholder='write the name of movie or series '
                         className='w-full bg-inherit outline-none px-2'
@@ -91,20 +94,21 @@ export default function SearchPage() {
                     ) : (
                         movies.map((movie) => (
 
-                            <li key={movie.id} className='flex border-b border-gray-500 p-4'
+                            <li key={movie.id} className='flex border-b flex-col md:flex-row border-gray-500 p-4'
                                 onClick={() => navigate('/m/' + movie.id, { state: movie.id })}
                             >
-                                <img className='w-28 h-40 min-w-28 object-cover rounded-md'
+                                <img className=' w-full md:w-28 h-40 min-w-28 object-cover rounded-md
+                                '
                                     src={`http://65.109.177.24:2024/api/file/image?size=w500&imgPath=${movie.backdrop_path}`} alt=" Posther" />
                                 <div className='p-2'>
-                                    <p className='font-bold text-lg'> {movie.title} - <span className='font-normal'>({movie.original_title}) - {movie.release_date}</span> </p>
-                                    <div className='my-3'>
-                                        {movie.genres && movie.genres.map(g =>
-                                            <span key={movie.id} className='bg-white rounded-full text-sm bg-opacity-30 p-1 mr-2'>{g}</span>)}
+                                    <p className='font-bold text-md md:text-lg'> {movie.title} - <span className='text-sm md:text-md font-normal'>({movie.original_title}) - {movie.release_date}</span> </p>
+                                    <div className='my-3 flex flex-wrap'>
+                                        {movie.genres && movie.genres.map((g,index) =>
+                                            <span key={index} className='bg-white rounded-full text-sm bg-opacity-30 p-1 mr-2 mt-1'>{g}</span>)}
                                     </div>
-                                    <p className='my-2'><span className='font-bold  text-pink-500'>IMDB  : </span> {movie.vote_average}</p>
+                                    <p className='my-2'><span className='font-bold  text-pink-500'>IMDB  : </span>   {movie.vote_average.toFixed(1).replace(/\.0$/, '')} <span className='text-gray-500'>/10</span></p>
 
-                                    <p className=' w-full lg:w-2/3'>{movie.overview} </p>
+                                    <p className=' w-full lg:w-2/3 text-sm'>{movie.overview.length>100?movie.overview.slice(0,100)+' ...':movie.overview} </p>
 
 
                                     <div className='flex'>
