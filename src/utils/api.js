@@ -9,6 +9,7 @@ const ApiClient=axios.create({
         Authorization:API_KEY,
     }
 })
+
 export  const fetchMovieByCategory=async(category,page=1)=>{
     try {
         const response=await ApiClient.get(`movie/${category}`,{
@@ -203,3 +204,17 @@ export const removeMovieFromLikedList=async(token,movieId)=>{
     }
     
     }
+//گرفتن اطلاعات کاربر
+export const getCurrentUser=async(token)=>{
+try {
+    const response=await axios.get(`${API_Base_URL_AMIR}user`,{
+        headers:{
+            Authorization: `Bearer ${token}`
+        }
+    })
+    return response.data;
+} catch (error) {
+    console.error('Error getting user',error)
+    throw error
+}
+}
