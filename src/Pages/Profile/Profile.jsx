@@ -7,30 +7,33 @@ import { getCurrentUser } from '../../utils/api'
 
 export default function Profile() {
     const { token } = useAuth()
-const [imagePath,setImagePath] = useState()
+    const [imagePath, setImagePath] = useState()
     const [imagePreview, setImagePreview] = useState()
- 
-const [userDetails, setUserDetails] = useState({})
 
-useEffect(()=>{
-    const fetchuserDetails=async()=>{
-        if(!token) return;
-        try {
-        let   data=await getCurrentUser(token) 
-           console.log(data)
-           setUserDetails(data)
-          setImagePath(data.imageId)
-        } catch (error) {
-            console.error('Error in fetching user ',error)
+    const [userDetails, setUserDetails] = useState({})
+
+    useEffect(() => {
+        const fetchuserDetails = async () => {
+            if (!token) return;
+            try {
+                let data = await getCurrentUser(token)
+                console.log(data)
+                setUserDetails(data)
+                setImagePath(data.imageId)
+            } catch (error) {
+                console.error('Error in fetching user ', error)
+            }
         }
-    }
-    fetchuserDetails()
-},[token])
+        fetchuserDetails()
+    }, [token])
 
-useEffect(()=>{
-    setImagePreview(`http://65.109.177.24:2024/api/user/profile-pic/${imagePath}`)
-},[imagePath])
-  
+    useEffect(() => {
+        if (imagePath) {
+            setImagePreview(`http://65.109.177.24:2024/api/user/profile-pic/${imagePath}`)
+
+        }
+    }, [imagePath])
+
 
 
 
@@ -49,7 +52,25 @@ useEffect(()=>{
         }
     };
 
-    
+    const uploadImage = async (file) => {
+        try {
+            const formData = new FormData();
+            formData.append('file', file)
+            const response = await axios.post('http://65.109.177.24:2024/api/user/profile-pic', formData
+                , {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "multipart/form-data",
+                    }
+                })
+
+        console.log("Image uploaded successfully", response.data);
+        setImagePath(response.data.imageId); 
+        } catch (error) {
+            console.error("Error uploading image", error);
+
+        }
+    }
 
 
 
@@ -87,33 +108,33 @@ useEffect(()=>{
 
                     <div className='   w-full md:px-3 md:w-1/2 flex  flex-col  justify-evenly md:justify-start items-start md:items-start'>
                         <label htmlFor="username" className='text-white font-bold my-1 mr-5 flex '> <span className='text-pink-400 mr-1'><PersonRounded /></span>
-                        User Name</label>
-                        <input type="text" id='username' className='w-full  p-2 my-2 bg-gray-900 border border-gray-300 outline-none  focus:border-pink-600 rounded-md text-white' 
-                        value={userDetails.userName||''}
+                            User Name</label>
+                        <input type="text" id='username' className='w-full  p-2 my-2 bg-gray-900 border border-gray-300 outline-none  focus:border-pink-600 rounded-md text-white'
+                            value={userDetails.userName || ''}
                         />
                     </div>
 
                     <div className=' w-full md:px-3 md:w-1/2 flex  flex-col  justify-evenly md:justify-start items-start md:items-start'>
                         <label htmlFor="email" className='text-white font-bold my-1 mr-5 flex '> <span className='text-pink-400 mr-1'><Email /></span>
-                        Email</label>
+                            Email</label>
                         <input type="email" id='email' className='w-full  p-2 my-2 bg-gray-900 border border-gray-300 outline-none rounded-md focus:border-pink-600 text-white '
-                        value={userDetails.email||''}
-                         />
+                            value={userDetails.email || ''}
+                        />
                     </div>
 
                     <div className=' w-full md:px-3 md:w-1/2 flex  flex-col  justify-evenly md:justify-start items-start md:items-start'>
                         <label htmlFor="firstname" className='text-white font-bold my-1 mr-5 flex '> <span className='text-pink-400 mr-1'><Person /></span>
-                        First Name</label>
+                            First Name</label>
                         <input type="text" id='firstname' className='w-full  p-2 my-2 bg-gray-900 border border-gray-300 outline-none rounded-md focus:border-pink-600 text-white '
-                        value={userDetails?.firstName||''}
-                         />
+                            value={userDetails?.firstName || ''}
+                        />
                     </div>
 
                     <div className=' w-full md:px-3 md:w-1/2 flex  flex-col  justify-evenly md:justify-start items-start md:items-start'>
                         <label htmlFor="lastname" className='text-white font-bold my-1 mr-5 flex '> <span className='text-pink-400 mr-1'><Person /></span>
-                        Lasst Name</label>
-                        <input type="text" id='lastname' className='w-full  p-2 my-2 bg-gray-900 border border-gray-300 outline-none rounded-md focus:border-pink-600 text-white ' 
-                        value={userDetails?.lastName||''}
+                            Lasst Name</label>
+                        <input type="text" id='lastname' className='w-full  p-2 my-2 bg-gray-900 border border-gray-300 outline-none rounded-md focus:border-pink-600 text-white '
+                            value={userDetails?.lastName || ''}
                         />
                     </div>
 

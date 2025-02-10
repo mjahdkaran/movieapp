@@ -4,19 +4,21 @@ import { useAuth } from '../../Context/AuthContext';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function Header() {
-    const { user, logout } = useAuth();
+    const { user, logout,userData } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
     const [isLogedIn, setIsLogedIn] = useState(!!user);
     const [isShowMenu, setIsShowMenu] = useState(false);
     const [showTooltip, setShowTooltip] = useState(false);
+    const [avatar,setAvatar] = useState(userData?.imageId||null);
 
     const menuRef = useRef(null); // مرجع به منو
 
     useEffect(() => {
         setIsLogedIn(!!user);
-    }, [user]);
+      setAvatar(userData?.imageId)
+    }, [user,userData?.imageId]);
 
 
 
@@ -76,7 +78,7 @@ export default function Header() {
                             onMouseLeave={() => setShowTooltip(false)}
                         >
                             <div className="w-full h-full rounded-full overflow-hidden">
-                                <img className='rounded-full w-full h-full object-cover' src="/image/Frame.png" alt="User" />
+                                <img className='rounded-full w-full h-full object-cover' src={userData?.imageId?`http://65.109.177.24:2024/api/user/profile-pic/${userData.imageId}`:"/image/Frame.png" }alt="User" />
                             </div>
 
 

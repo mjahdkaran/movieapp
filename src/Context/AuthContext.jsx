@@ -1,24 +1,48 @@
+import axios from 'axios'
 import React, { createContext, useState, useContext, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 const AuthContext = createContext()
+const API_Base_URL_AMIR='http://65.109.177.24:2024/api/'
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
-    const [token, setToken] = useState(null)
+    const [token, setToken] = useState(localStorage.getItem('token')||null)
     const [loginError, setLoginError] = useState()
     const [signUpError, setSignUpError] = useState()
+    const[userData,setUserData]=useState({})
     const navigate = useNavigate()
 
 
     useEffect(() => {
         let token = localStorage.getItem('token')
-        
-        
+
+
         if (token) {
             setToken(token)
             setUser(localStorage.getItem('userName'))
-            
+
         }
     }, [])
+    useEffect(()=>{
+        if (!token) return;
+        const getCurrentUser=async(token)=>{
+            try {
+                const response=await axios.get(`${API_Base_URL_AMIR}user`,{
+                    headers:{
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                return setUserData (response.data);
+            } catch (error) {
+                console.error('Error getting user',error)
+                throw error
+            }
+            }
+         getCurrentUser(token)
+
+
+    },[token])
+    
+        
 
     // SignUp
     const signUp = async (formValues) => {
@@ -32,18 +56,18 @@ export const AuthProvider = ({ children }) => {
                     'email': formValues.email
                 })
             });
-            console.log('response'+response)
+            console.log('response' + response)
             if (!response.ok) {
                 const errorData = await response.json()
-                console.log('errorData',errorData)
+                console.log('errorData', errorData)
                 setSignUpError(errorData.errorMessage)
-               
+
                 throw new Error(errorData.errorMessage || 'registration failed')
             }
             const data = await response.json()
             if (data) {
                 window.localStorage.setItem('token', data)
-                window.localStorage.setItem('userName', formValues.username); 
+                window.localStorage.setItem('userName', formValues.username);
                 setUser(formValues.username)
                 setSignUpError('')
             }
@@ -77,13 +101,13 @@ export const AuthProvider = ({ children }) => {
             const data = await response.json()
             if (data) {
                 window.localStorage.setItem('token', data)
-                window.localStorage.setItem('userName', formValues.username); 
+                window.localStorage.setItem('userName', formValues.username);
                 setUser(formValues.username)
                 navigate('/')
 
             }
         } catch (error) {
-            setLoginError(error.message|| 'login failed')
+            setLoginError(error.message || 'login failed')
 
         }
 
@@ -95,16 +119,16 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('token');
     }
 
-    const getToken=() => {
-        let token=localStorage.getItem('token')
-    
+    const getToken = () => {
+        let token = localStorage.getItem('token')
+
         return token
     }
     return (
 
 
 
-        <AuthContext.Provider value={{ user, setLoginError, loginError, logIn, signUp ,signUpError,logout,getToken,token}}>
+        <AuthContext.Provider value={{ user, setLoginError, loginError, logIn, signUp, signUpError, logout, getToken, token ,userData}}>
             {children}
         </AuthContext.Provider>
     )
