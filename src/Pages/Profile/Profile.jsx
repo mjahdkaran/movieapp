@@ -3,12 +3,37 @@ import PageLayout from '../../Layout/PageLayout'
 import { Camera, Email, LockClosed, Person, PersonRounded, Trash } from '../../utils/icon'
 import axios from 'axios'
 import { useAuth } from '../../Context/AuthContext'
+import { getCurrentUser } from '../../utils/api'
 
 export default function Profile() {
-    const { userInfo, token } = useAuth()
-
-    const [imagePreview, setImagePreview] = useState(userInfo?.imageId && `http://65.109.177.24:2024/api/user/profile-pic/${userInfo.imageId}`);
+    const { token } = useAuth()
+const [imagePath,setImagePath] = useState()
+    const [imagePreview, setImagePreview] = useState()
  
+const [userDetails, setUserDetails] = useState({})
+
+useEffect(()=>{
+    const fetchuserDetails=async()=>{
+        if(!token) return;
+        try {
+        let   data=await getCurrentUser(token) 
+           console.log(data)
+           setUserDetails(data)
+          setImagePath(data.imageId)
+        } catch (error) {
+            console.error('Error in fetching user ',error)
+        }
+    }
+    fetchuserDetails()
+},[token])
+
+useEffect(()=>{
+    setImagePreview(`http://65.109.177.24:2024/api/user/profile-pic/${imagePath}`)
+},[imagePath])
+  
+
+
+
 
     const selectImageHandler = (e) => {
         const file = e.target.files[0];
@@ -23,6 +48,8 @@ export default function Profile() {
             alert("Please select an image file");
         }
     };
+
+    
 
 
 
@@ -59,23 +86,35 @@ export default function Profile() {
                 <div className=' md:px-4  my-5 py-5 flex flex-col  md:flex-row md:flex-wrap justify-evenly  items-start md:items-center    '>
 
                     <div className='   w-full md:px-3 md:w-1/2 flex  flex-col  justify-evenly md:justify-start items-start md:items-start'>
-                        <label htmlFor="username" className='text-white font-bold my-1 mr-5 flex '> <span className='text-pink-400 mr-1'><PersonRounded /></span>User Name</label>
-                        <input type="text" id='username' className='w-full  p-2 my-2 bg-gray-900 border border-gray-300 outline-none  focus:border-pink-600 rounded-md text-white' />
+                        <label htmlFor="username" className='text-white font-bold my-1 mr-5 flex '> <span className='text-pink-400 mr-1'><PersonRounded /></span>
+                        User Name</label>
+                        <input type="text" id='username' className='w-full  p-2 my-2 bg-gray-900 border border-gray-300 outline-none  focus:border-pink-600 rounded-md text-white' 
+                        value={userDetails.userName||''}
+                        />
                     </div>
 
                     <div className=' w-full md:px-3 md:w-1/2 flex  flex-col  justify-evenly md:justify-start items-start md:items-start'>
-                        <label htmlFor="email" className='text-white font-bold my-1 mr-5 flex '> <span className='text-pink-400 mr-1'><Email /></span>Email</label>
-                        <input type="email" id='email' className='w-full  p-2 my-2 bg-gray-900 border border-gray-300 outline-none rounded-md focus:border-pink-600 text-white ' />
+                        <label htmlFor="email" className='text-white font-bold my-1 mr-5 flex '> <span className='text-pink-400 mr-1'><Email /></span>
+                        Email</label>
+                        <input type="email" id='email' className='w-full  p-2 my-2 bg-gray-900 border border-gray-300 outline-none rounded-md focus:border-pink-600 text-white '
+                        value={userDetails.email||''}
+                         />
                     </div>
 
                     <div className=' w-full md:px-3 md:w-1/2 flex  flex-col  justify-evenly md:justify-start items-start md:items-start'>
-                        <label htmlFor="firstname" className='text-white font-bold my-1 mr-5 flex '> <span className='text-pink-400 mr-1'><Person /></span>First Name</label>
-                        <input type="text" id='firstname' className='w-full  p-2 my-2 bg-gray-900 border border-gray-300 outline-none rounded-md focus:border-pink-600 text-white ' />
+                        <label htmlFor="firstname" className='text-white font-bold my-1 mr-5 flex '> <span className='text-pink-400 mr-1'><Person /></span>
+                        First Name</label>
+                        <input type="text" id='firstname' className='w-full  p-2 my-2 bg-gray-900 border border-gray-300 outline-none rounded-md focus:border-pink-600 text-white '
+                        value={userDetails?.firstName||''}
+                         />
                     </div>
 
                     <div className=' w-full md:px-3 md:w-1/2 flex  flex-col  justify-evenly md:justify-start items-start md:items-start'>
-                        <label htmlFor="lastname" className='text-white font-bold my-1 mr-5 flex '> <span className='text-pink-400 mr-1'><Person /></span>Lasst Name</label>
-                        <input type="text" id='lastname' className='w-full  p-2 my-2 bg-gray-900 border border-gray-300 outline-none rounded-md focus:border-pink-600 text-white ' />
+                        <label htmlFor="lastname" className='text-white font-bold my-1 mr-5 flex '> <span className='text-pink-400 mr-1'><Person /></span>
+                        Lasst Name</label>
+                        <input type="text" id='lastname' className='w-full  p-2 my-2 bg-gray-900 border border-gray-300 outline-none rounded-md focus:border-pink-600 text-white ' 
+                        value={userDetails?.lastName||''}
+                        />
                     </div>
 
                     <div className=' w-full mt-4  flex    justify-end  items-center '>
