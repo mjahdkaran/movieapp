@@ -10,6 +10,7 @@ import FallBackComponent from './Pages/Error';
 // import FavoriteMovieList from './Pages/FavoriteMovieList/FavoriteMovieList';
 import WhatchList from './Pages/WhatchList/WhatchList';
 import FavoriteList from './Pages/FavoriteList/FavoriteList';
+import Profile from './Pages/Profile/Profile';
 export default function routes() {
     return (
         <Routes>
@@ -21,6 +22,8 @@ export default function routes() {
             <Route path="/search" element={<SearchPage />} />
             <Route path="/watchlist" element={<WhatchList />} />
             <Route path="/liked" element={<FavoriteList />} />
+            <Route path="/profile" element={<Profile />} />
+
             <Route path="*" element={<FallBackComponent />} />
 
 
