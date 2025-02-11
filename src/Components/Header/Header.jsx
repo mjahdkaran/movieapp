@@ -2,23 +2,43 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Movie, Search } from '../../utils/icon';
 import { useAuth } from '../../Context/AuthContext';
 import { useLocation, useNavigate } from 'react-router-dom';
-
+import axios from 'axios';
+const API_Base_URL_AMIR = 'http://65.109.177.24:2024/api/'
 export default function Header() {
-    const { user, logout,userData } = useAuth();
+    const { user, logout, token } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
     const [isLogedIn, setIsLogedIn] = useState(!!user);
     const [isShowMenu, setIsShowMenu] = useState(false);
     const [showTooltip, setShowTooltip] = useState(false);
-    const [avatar,setAvatar] = useState(userData?.imageId||null);
+    const [userData, setUserData] = useState({});
 
     const menuRef = useRef(null); // مرجع به منو
 
     useEffect(() => {
         setIsLogedIn(!!user);
-      setAvatar(userData?.imageId)
-    }, [user,userData?.imageId]);
+
+    }, [user]);
+
+    useEffect(() => {
+        if (!token) return;
+        const getCurrentUser = async (token) => {
+            try {
+                const response = await axios.get(`${API_Base_URL_AMIR}user`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                let details = response.data
+                return setUserData(details);
+            } catch (error) {
+                console.error('Error getting user', error)
+                throw error
+            }
+        }
+        getCurrentUser(token)
+    }, [])
 
 
 
@@ -78,7 +98,9 @@ export default function Header() {
                             onMouseLeave={() => setShowTooltip(false)}
                         >
                             <div className="w-full h-full rounded-full overflow-hidden">
-                                <img className='rounded-full w-full h-full object-cover' src={userData?.imageId?`http://65.109.177.24:2024/api/user/profile-pic/${userData.imageId}`:"/image/Frame.png" }alt="User" />
+                                <img className='rounded-full w-full h-full object-cover'
+                                    src={userData.imageId ? `http://65.109.177.24:2024/api/user/profile-pic/${userData.imageId}` : "/image/Frame.png"}
+                                    alt="User" />
                             </div>
 
 
