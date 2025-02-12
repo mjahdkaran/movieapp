@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Movie, Search } from '../../utils/icon';
+import { Exit, Movie, Search } from '../../utils/icon';
 import { useAuth } from '../../Context/AuthContext';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -113,10 +113,10 @@ export default function Header() {
                                     <li className='hover:bg-pink-700 transition-all px-3 py-1' onClick={() => navigate('/WatchList')}>WatchList</li>
                                     <li className='hover:bg-pink-700 transition-all px-3 py-1' onClick={() => navigate('/liked')}>Favorite</li>
                                     <hr />
-                                    <li className='hover:bg-pink-700 transition-all px-3 py-1' onClick={() => {
+                                    <li className=' flex  justify-between hover:bg-pink-700 transition-all px-3 py-1' onClick={() => {
                                         logout()
                                         navigate('/')
-                                    }}>Logout</li>
+                                    }}>Logout <span><Exit/></span></li>
 
                                 </ul>
                             </div>
@@ -127,7 +127,7 @@ export default function Header() {
 
 
             {showTooltip && (
-                <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 bg-pink-500 text-white text-sm px-2 py-1 rounded shadow-lg">
+                <div className="absolute  left-1/2 transform -translate-x-1/2 bg-pink-500 text-white md:text-sm text-xs px-2 py-1 rounded shadow-lg">
                     {`Logged in as ${user}`}
                 </div>
             )}

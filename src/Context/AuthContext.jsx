@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
             setUser(localStorage.getItem('userName'))
 
         }
-    }, [])
+    }, [token])
 
         
 
