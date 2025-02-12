@@ -6,7 +6,7 @@ import { useAuth } from '../../Context/AuthContext';
 import { getCurrentUser } from '../../utils/api';
 
 export default function Profile() {
-    const { token } = useAuth();
+    const { token,userImage,setuserImage ,updateUserImage} = useAuth();
     const [imagePath, setImagePath] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
     const [isShowPassword,setIsShowPassword] = useState(false);
@@ -38,7 +38,7 @@ export default function Profile() {
 
         return () => clearTimeout(timer);
 
-    }, [imagePath, errorMessage, confirmMessage]);
+    }, [imagePath, errorMessage, confirmMessage,userImage]);
     // -----------------------------------------------------------------------
 
     const fetchUserDetails = async () => {
@@ -90,6 +90,7 @@ export default function Profile() {
             if (response.data.imageId) {
                 setConfirmMessage('Image uploaded successfully.')
                 setImagePath(response.data.imageId);
+               
             }
         } catch (error) {
             console.error('Error uploading image:', error);

@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 const API_Base_URL_AMIR = 'http://65.109.177.24:2024/api/'
 export default function Header() {
-    const { user, logout, token } = useAuth();
+    const { user,userImage, logout, token } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 

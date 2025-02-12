@@ -1,16 +1,32 @@
 import axios from 'axios'
 import React, { createContext, useState, useContext, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { data, useNavigate } from 'react-router-dom'
+import { getCurrentUser } from '../utils/api'
 const AuthContext = createContext()
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
-    const [token, setToken] = useState(localStorage.getItem('token')||null)
+    const [token, setToken] = useState(localStorage.getItem('token') || null)
     const [loginError, setLoginError] = useState()
+    const [userImage, setuserImage] = useState('')
     const [signUpError, setSignUpError] = useState()
     const navigate = useNavigate()
 
 
+    useEffect(() => {
+        const fetchUserInfo = async () => {
+            try {
+                const data = await getCurrentUser(token);
+                if (data.imageId && data.imageId !== userImage) { // تغییر مقدار بررسی شود
+                    setuserImage(data.imageId);
+                }
+            } catch (error) {
+                console.error('Error getting user info in Auth context', error);
+            }
+        };
+        fetchUserInfo();
+    }, [token]);
+//-----
     useEffect(() => {
         let token = localStorage.getItem('token')
 
@@ -22,7 +38,7 @@ export const AuthProvider = ({ children }) => {
         }
     }, [token])
 
-        
+
 
     // SignUp
     const signUp = async (formValues) => {
@@ -108,7 +124,7 @@ export const AuthProvider = ({ children }) => {
 
 
 
-        <AuthContext.Provider value={{ user, setLoginError, loginError, logIn, signUp, signUpError, logout, getToken, token }}>
+        <AuthContext.Provider value={{ user, userImage,setLoginError, loginError, logIn, signUp, signUpError, logout, getToken, token }}>
             {children}
         </AuthContext.Provider>
     )
