@@ -10,19 +10,25 @@ import axios from 'axios';
 export default function Movie() {
     const [isSaved, setIsSaved] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
+    const [showReplies, setShowReplies] = useState({}); // وضعیت نمایش کامنت‌های فرزند
     const [thisMovieGenre, setThisMovieGenre] = useState([]);
     const [details, setDetails] = useState(null);
     const [comment, setComment] = useState('');
     const [allCommentsArray, setAllCommentsArray] = useState([])
-    const { token ,user,userImage} = useAuth();
+    const [childComments, setChildComments] = useState({}); // کامنت‌های فرزند هر کامنت
+
+    const [parentComment, setParentComment] = useState({})
+    const { token, user, userImage } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
     const movieId = location.state;
 
     useEffect(() => {
-// console.log('user image',userImage)
+        // console.log('user image',userImage)
         fetchComments()
+       
         const fetchData = async () => {
+            console.log(parentComment)
             try {
                 if (!movieId) return;
                 const movieDetails = await fetchMovieById(movieId);
@@ -40,7 +46,7 @@ export default function Movie() {
         };
 
         fetchData();
-    }, [token, movieId, allCommentsArray]);
+    }, [token, movieId, childComments,comment]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -66,6 +72,25 @@ export default function Movie() {
             console.error('Error getting comments', error)
         }
     }
+    //-------------
+    const fetchChildComments = async (parentId) => {
+        try {
+            const response = await axios.get(`http://65.109.177.24:2024/api/comment/parent/${parentId}`)
+             
+        setChildComments(prev => ({
+            ...prev,
+            [parentId]: response.data // ذخیره‌ی کامنت‌های فرزند بر اساس parentId
+        }));
+
+        setShowReplies(prev => ({
+            ...prev,
+            [parentId]: true // نمایش کامنت‌های فرزند این کامنت
+        }));
+            console.log(response.data)
+        } catch (error) {
+            console.error('Error getting child comments', error)
+        }
+    }
     //---------------
     const addComment = async () => {
         if (!comment) return;
@@ -73,7 +98,7 @@ export default function Movie() {
             const response = await axios.post('http://65.109.177.24:2024/api/comment', {
                 "movieId": movieId,
                 "Description": comment,
-                "parentId": null
+                "parentId": parentComment?.id || null
             }, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -81,26 +106,36 @@ export default function Movie() {
             })
             console.log('added comment successfully');
 
-            setComment('')
 
+            setComment('')
+            setParentComment(null)
+            if (parentComment?.id) {
+                fetchChildComments(parentComment.id);
+            } else {
+                fetchComments(); // کامنت‌های اصلی را آپدیت کن
+            }
 
         } catch (error) {
             console.log('add Comment failed', error)
 
         }
     }
-   const  removeComment=async(id)=>{
-    try {
-        const response=await axios.delete(`http://65.109.177.24:2024/api/comment/${id}`,{
-            headers:{Authorization:`Bearer ${token}`}
-        }) 
-        console.log(response)
-        console.log('remove comment succesfully')
-    } catch (error) {
-        console.error('error removing comment ',error)
+    const removeComment = async (id,parentId = null) => {
+        try {
+            const response = await axios.delete(`http://65.109.177.24:2024/api/comment/${id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+            console.log('remove comment succesfully')
+            if (!parentId) {
+                fetchComments();
+            } else {
+                fetchChildComments(parentId);
+            }
+        } catch (error) {
+            console.error('error removing comment ', error)
+        }
+
     }
-    
-   }
     //-----------
 
     const saveMovie = async () => {
@@ -222,20 +257,26 @@ export default function Movie() {
                     {/* ------user comments------- */}
                     <div className='  flex items-center fixed  left-0 right-0 bottom-0 p-2    bg-black bg-opacity-35 z-10'>
 
-                        <img src={userImage?`http://65.109.177.24:2024/api/user/profile-pic/${userImage}`:"/image/Frame.png"} alt="" className='h-10 w-10  rounded-full object-cover mx-2' />
+                        <img src={userImage ? `http://65.109.177.24:2024/api/user/profile-pic/${userImage}` : "/image/Frame.png"} alt="" className='h-10 w-10  rounded-full object-cover mx-2' />
                         <div className='  flex  flex-col border rounded-full bg-black  overflow-hidden w-full md:w-1/2 '>
                             {/* زمان جواب دادن به یک کامنت نشان داده شود  */}
-                            {/* <p className='text-sm px-3 pt-1 bg-gray-700 text-pink-400 font-bold'>Reply to @azadeh</p> */}
+                            {parentComment?.id && 
+                                <div className=' flex justify-between text-sm px-3 pt-1 bg-gray-800 text-white  '>
+                                    <p className='text-gray-400'>Reply to <span className='text-blue-600 text-md font-bold'>@{parentComment.userName}</span> </p>
+                                    <button className='text-lg mr-3 font-bold '
+                                        onClick={() => setParentComment(null)}>×</button> </div>
+
+                            }
                             <input type="text" name="" id="" placeholder='add your comment...'
                                 value={comment}
                                 onChange={(e) => { setComment(e.target.value) }}
-                                onKeyDown={(e) => e.key === "Enter" && addComment()} 
+                                onKeyDown={(e) => e.key === "Enter" && addComment()}
                                 className='   bg-inherit outline-none    px-3 py-1' />
                         </div>
                         <button className='text-pink-600'
                             onClick={addComment}
-                           
-                            ><Send /></button>
+
+                        ><Send /></button>
                     </div>
                     <div className=''>
                         {/* other user comment */}
@@ -245,21 +286,57 @@ export default function Movie() {
                                     <div className='flex  relative items-center justify-start mb-3'>
                                         <img src={comment.userImageId ? `http://65.109.177.24:2024/api/user/profile-pic/${comment.userImageId}` : `/image/Frame.png`} alt=""
                                             className='h-8 w-8 rounded-full mx-2 object-cover' />
-                                            <p className='text-md font-bold text-pink-600' >{comment.userName}</p>
-                                            {user===comment.userName&&
+                                        <p className='text-md font-bold text-pink-600' >{comment.userName}</p>
+                                        {user === comment.userName &&
                                             <button className='absolute right-4 top-2 text-red-600'
-                                            onClick={()=>removeComment(comment.id)}>
-                                            <Trash size='size-5' />
+                                                onClick={() => removeComment(comment.id)}>
+                                                <Trash size='size-5' />
                                             </button>}
-                                     
-                                        
+
+
 
                                     </div>
                                     <p>{comment.description}</p>
-                                    <button className='text-pink-600 text-xs font-bold'>Reply</button>
+                                    <button className='text-pink-600 text-xs font-bold'
+                                        onClick={() => setParentComment(comment)}> Reply</button>
+
+
+                                    {!showReplies[comment.id]  && comment.childrenCount > 0 && 
+                                    <button className='text-xs ml-6 text-gray-400'
+                                        onClick={() => { fetchChildComments(comment.id)}}
+                                    > see {comment.childrenCount}  more replies</button>}
+                                    {/* ------reply comment section     */}
+                                    {showReplies[comment.id]&&childComments[comment.id]  && childComments[comment.id].map(reply => (
+                                        <div key={reply.id} className=' border border-gray-700 p-2 ml-5 bg-gray-800 my-2 rounded-tr-xl rounded-br-xl rounded-bl-xl'>
+                                            <div className='flex  relative items-center justify-start mb-3'>
+                                                <img src={comment.userImageId ? `http://65.109.177.24:2024/api/user/profile-pic/${reply.userImageId}` : `/image/Frame.png`} alt=""
+                                                    className='h-8 w-8 rounded-full mx-2 object-cover' />
+                                                <p className='text-md font-bold text-pink-600' >{reply.userName}</p>
+                                                {user === reply.userName &&
+                                                    <button className='absolute right-4 top-2 text-red-600'
+                                                        onClick={() => removeComment(reply.id,comment.id)}>
+                                                        <Trash size='size-5' />
+                                                    </button>}
+
+
+
+                                            </div>
+                                            <p>{reply.description}</p>
+                                            {/* <button className='text-pink-600 text-xs font-bold'
+                                                onClick={() => setParentComment(reply)}>  Reply</button> */}
+                                        </div>
+
+
+                                    ))
+
+                                    }
+
+
+
+
                                 </div>
                             ))}
-                        {/* other user comment */}
+                        {/* reply comment section  */}
 
                         {/* other user comment */}
 
