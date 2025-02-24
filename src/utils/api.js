@@ -38,6 +38,23 @@ export  const fetchMovieById=async(movieId)=>{
         console.error('fetchMovieById error')
     }
 }
+// Series
+export  const fetchSeriesByCategory=async(category,page=1)=>{
+    try {
+        const response=await ApiClient.get(`tv/${category}`,{
+            params:{
+                language: 'en-US',
+                page,
+            }
+        })
+        // console.log('series',response.data.results)
+        return response.data.results || []
+    } catch (error) {
+        console.log(`error fetching ${category} movies: `, error);
+        return []
+    }
+    
+}
 
 export const fetchGenreOfMovie=async()=>{
 try{

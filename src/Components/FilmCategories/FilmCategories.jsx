@@ -1,52 +1,44 @@
 import React, { useEffect, useState } from 'react';
 import PosterCard from '../PosterCard/PosterCard';
 import { Rdirection } from '../../utils/icon';
-import { fetchMovieByCategory, fetchGenreOfMovie } from '../../utils/api'
-import './FilmCategories.css'
 import { useNavigate } from 'react-router-dom';
 
-export default function FilmCategories({ title }) {
+export default function FilmCategories({ title, endpoint, fetchMoviesFunction }) {
     const [movies, setMovies] = useState([]); // ذخیره فیلم‌ها
     const [isLoading, setIsLoading] = useState(true); // مدیریت وضعیت بارگذاری
-    const navigate = useNavigate()
-    const endpoints = {
-        'up coming': 'upcoming',
-        'Top Rated': 'top_rated',
-        'Popular': 'popular',
-        'Now Playing': 'now_playing',
-    };
-
-    const endpoint = endpoints[title] || 'upcoming'; // مقدار پیش‌فرض
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchMovies = async () => {
             try {
                 setIsLoading(true);
-                const data = await fetchMovieByCategory(endpoint, 1)
-                let sliceData = data.slice(0, 6)
-                setMovies(sliceData);
+                const data = await fetchMoviesFunction(endpoint, 1); // دریافت داده‌ها با استفاده از تابع ورودی
+                let sliceData = data.slice(0, 6); // برش داده‌ها
+                setMovies(sliceData); // ذخیره داده‌ها
             } catch (error) {
                 console.error('Error fetching movies:', error);
             } finally {
-                setIsLoading(false);
+                setIsLoading(false); // غیرفعال کردن بارگذاری
             }
         };
 
-        fetchMovies();
-
-    }, [title]);
+        fetchMovies(); // فراخوانی تابع
+    }, [title, endpoint, fetchMoviesFunction]); // زمانی که title، endpoint یا fetchMoviesFunction تغییر کند، دوباره اجرا می‌شود
 
     return (
-        <div className=" scroll-container bg-black bg-opacity-95 text-white px-10 py-4">
+        <div className="scroll-container bg-black bg-opacity-95 text-white px-10 py-4">
             {/* عنوان دسته‌بندی */}
             <div className="flex justify-between">
-                <p className="font-bold text-2xl text-pink-400 hover:text-pink-500 cursor-pointer"
+                <p
+                    className="font-bold text-2xl text-pink-400 hover:text-pink-500 cursor-pointer"
                     onClick={() => navigate('/' + endpoint)}
-                >{title}</p>
-                <div className="flex items-center font-medium text-lg text-pink-500 hover:text-pink-600 cursor-pointer"
+                >
+                    {title}
+                </p>
+                <div
+                    className="flex items-center font-medium text-lg text-pink-500 hover:text-pink-600 cursor-pointer"
                     onClick={() => navigate('/' + endpoint, { state: title })}
                 >
-
                     See All
                     <span className="m-2">
                         <Rdirection />
@@ -55,13 +47,12 @@ export default function FilmCategories({ title }) {
             </div>
 
             {/* نمایش فیلم‌ها */}
-            <div className="flex overflow-x-auto justify-start space-x-4 py-4  ">
+            <div className="flex overflow-x-auto justify-start space-x-4 py-4">
                 {isLoading ? (
                     <>
-                        <p className='text-center'>Loading...</p>
+                        <p className="text-center">Loading...</p>
                         <div className="animate-spin border-4 border-t-4 border-gray-300 rounded-full w-14 h-14 border-t-pink-500"></div>
                     </>
-
                 ) : (
                     movies.map((movie) => (
                         <PosterCard
@@ -74,7 +65,3 @@ export default function FilmCategories({ title }) {
         </div>
     );
 }
-
-
-
-
