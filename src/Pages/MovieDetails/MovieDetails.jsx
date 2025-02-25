@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { fetchMovieById, fetchGenreOfMovie, checkSavedMovie, saveMovieToPlaylist, removeMovieFromPlaylist, saveMovieToLikedList, removeMovieFromLikedList, checkLikedMovie } from '../../utils/api';
 import { useAuth } from '../../Context/AuthContext';
 import axios from 'axios';
+import MyComment from '../../Components/MyComment/MyComment';
 
 export default function Movie() {
     const [isSaved, setIsSaved] = useState(false);
@@ -92,34 +93,7 @@ export default function Movie() {
         }
     }
     //---------------
-    const addComment = async () => {
-        if (!comment) return;
-        try {
-            const response = await axios.post('http://65.109.177.24:2024/api/comment', {
-                "movieId": movieId,
-                "Description": comment,
-                "parentId": parentComment?.id || null
-            }, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
-            console.log('added comment successfully');
-
-
-            setComment('')
-            setParentComment(null)
-            if (parentComment?.id) {
-                fetchChildComments(parentComment.id);
-            } else {
-                fetchComments(); // کامنت‌های اصلی را آپدیت کن
-            }
-
-        } catch (error) {
-            console.log('add Comment failed', error)
-
-        }
-    }
+   
     const removeComment = async (id,parentId = null) => {
         try {
             const response = await axios.delete(`http://65.109.177.24:2024/api/comment/${id}`, {
@@ -255,29 +229,16 @@ export default function Movie() {
 
                 <div className='    rounded-sm p-2 w'>
                     {/* ------user comments------- */}
-                    <div className='  flex items-center fixed  left-0 right-0 bottom-0 p-2    bg-black bg-opacity-35 z-10'>
-
-                        <img src={userImage ? `http://65.109.177.24:2024/api/user/profile-pic/${userImage}` : "/image/Frame.png"} alt="" className='h-10 w-10  rounded-full object-cover mx-2' />
-                        <div className='  flex  flex-col border rounded-full bg-black  overflow-hidden w-full md:w-1/2 '>
-                            {/* زمان جواب دادن به یک کامنت نشان داده شود  */}
-                            {parentComment?.id && 
-                                <div className=' flex justify-between text-sm px-3 pt-1 bg-gray-800 text-white  '>
-                                    <p className='text-gray-400'>Reply to <span className='text-blue-600 text-md font-bold'>@{parentComment.userName}</span> </p>
-                                    <button className='text-lg mr-3 font-bold '
-                                        onClick={() => setParentComment(null)}>×</button> </div>
-
-                            }
-                            <input type="text" name="" id="" placeholder='add your comment...'
-                                value={comment}
-                                onChange={(e) => { setComment(e.target.value) }}
-                                onKeyDown={(e) => e.key === "Enter" && addComment()}
-                                className='   bg-inherit outline-none    px-3 py-1' />
-                        </div>
-                        <button className='text-pink-600'
-                            onClick={addComment}
-
-                        ><Send /></button>
-                    </div>
+                    <MyComment 
+                    parentComment={parentComment}
+                     setParentComment={setParentComment} 
+                     movieId={movieId}
+                      setAllCommentsArray={setAllCommentsArray}
+                      fetchComments={fetchComments}
+                      fetchChildComments={fetchChildComments}
+                       />
+                    {/* ------user comments------- */}
+                   
                     <div className=''>
                         {/* other user comment */}
                         {!allCommentsArray.length > 0 ? <p className='  text-white flex justify-center'>No comment yet! Be the first one</p> :
