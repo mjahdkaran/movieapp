@@ -59,7 +59,21 @@ export  const fetchSeriesByCategory=async(category,page=1)=>{
     }
     
 }
-
+//گرفتن جزئیات هر سریال با آی دی 
+export  const fetchSeriesById=async(movieId)=>{
+    try {
+        const response= await axios.get(`https://api.themoviedb.org/3/tv/${movieId}?language=en-US`,{
+            headers:{'content-type': 'application/json',
+                Authorization:API_KEY
+            }
+        })
+        console.log('SeriesDetails:',response.data)
+        return response.data||{}
+    } catch (error) {
+        console.error('fetchMovieById error')
+    }
+}
+//-------------------------------
 export const fetchGenreOfMovie=async()=>{
 try{
     const response=await ApiClient.get('genre/movie/list',{
