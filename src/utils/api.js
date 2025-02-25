@@ -18,6 +18,7 @@ export  const fetchMovieByCategory=async(category,page=1)=>{
                 page,
             }
         })
+        console.log('movies',response.data.results )
         return response.data.results || []
     } catch (error) {
         console.log(`error fetching ${category} movies: `, error);
@@ -33,6 +34,7 @@ export  const fetchMovieById=async(movieId)=>{
                 Authorization:API_KEY
             }
         })
+        console.log('movieDetails:',response.data)
         return response.data||{}
     } catch (error) {
         console.error('fetchMovieById error')
@@ -48,6 +50,8 @@ export  const fetchSeriesByCategory=async(category,page=1)=>{
             }
         })
         // console.log('series',response.data.results)
+        console.log('series',response.data.results)
+
         return response.data.results || []
     } catch (error) {
         console.log(`error fetching ${category} movies: `, error);

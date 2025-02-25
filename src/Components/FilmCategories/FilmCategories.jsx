@@ -3,7 +3,7 @@ import PosterCard from '../PosterCard/PosterCard';
 import { Rdirection } from '../../utils/icon';
 import { useNavigate } from 'react-router-dom';
 
-export default function FilmCategories({ title, endpoint, fetchMoviesFunction }) {
+export default function FilmCategories({ title, endpoint, fetchMoviesFunction,type }) {
     const [movies, setMovies] = useState([]); // ذخیره فیلم‌ها
     const [isLoading, setIsLoading] = useState(true); // مدیریت وضعیت بارگذاری
     const navigate = useNavigate();
@@ -58,6 +58,7 @@ export default function FilmCategories({ title, endpoint, fetchMoviesFunction })
                         <PosterCard
                             key={movie.id}
                             movieobj={movie} // ارسال آبجکت فیلم به PosterCard
+                            
                         />
                     ))
                 )}
