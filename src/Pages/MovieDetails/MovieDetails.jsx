@@ -26,19 +26,15 @@ export default function Movie() {
     useEffect(() => {
         // console.log('user image',userImage)
         fetchComments()
-       
+
         const fetchData = async () => {
             console.log(parentComment)
             try {
                 if (!movieId) return;
                 const movieDetails = await fetchMovieById(movieId);
                 setDetails(movieDetails);
-
-                const genres = await fetchGenreOfMovie();
-                if (movieDetails.genre_ids) {
-                    setThisMovieGenre(
-                        movieDetails.genre_ids.map(id => genres.find(genre => genre.id === id)?.name).filter(Boolean)
-                    );
+                if (movieDetails.genres) {
+                    setThisMovieGenre(movieDetails.genres)
                 }
             } catch (error) {
                 console.error('Error fetching movie details:', error);
@@ -46,7 +42,7 @@ export default function Movie() {
         };
 
         fetchData();
-    }, [token, movieId, childComments,comment]);
+    }, [token, movieId, childComments, comment]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -76,16 +72,16 @@ export default function Movie() {
     const fetchChildComments = async (parentId) => {
         try {
             const response = await axios.get(`http://65.109.177.24:2024/api/comment/parent/${parentId}`)
-             
-        setChildComments(prev => ({
-            ...prev,
-            [parentId]: response.data // ذخیره‌ی کامنت‌های فرزند بر اساس parentId
-        }));
 
-        setShowReplies(prev => ({
-            ...prev,
-            [parentId]: true // نمایش کامنت‌های فرزند این کامنت
-        }));
+            setChildComments(prev => ({
+                ...prev,
+                [parentId]: response.data // ذخیره‌ی کامنت‌های فرزند بر اساس parentId
+            }));
+
+            setShowReplies(prev => ({
+                ...prev,
+                [parentId]: true // نمایش کامنت‌های فرزند این کامنت
+            }));
             console.log(response.data)
         } catch (error) {
             console.error('Error getting child comments', error)
@@ -120,7 +116,7 @@ export default function Movie() {
 
         }
     }
-    const removeComment = async (id,parentId = null) => {
+    const removeComment = async (id, parentId = null) => {
         try {
             const response = await axios.delete(`http://65.109.177.24:2024/api/comment/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
@@ -212,8 +208,8 @@ export default function Movie() {
                                 </p>
                                 <div className="flex">
                                     {thisMovieGenre.map(genre => (
-                                        <span key={genre} className="bg-white rounded-full text-sm bg-opacity-30 px-2 m-1">
-                                            {genre}
+                                        <span key={genre.name} className="bg-white rounded-full text-sm bg-opacity-30 px-2 m-1">
+                                            {genre.name}
                                         </span>
                                     ))}
                                 </div>
@@ -260,7 +256,7 @@ export default function Movie() {
                         <img src={userImage ? `http://65.109.177.24:2024/api/user/profile-pic/${userImage}` : "/image/Frame.png"} alt="" className='h-10 w-10  rounded-full object-cover mx-2' />
                         <div className='  flex  flex-col border rounded-full bg-black  overflow-hidden w-full md:w-1/2 '>
                             {/* زمان جواب دادن به یک کامنت نشان داده شود  */}
-                            {parentComment?.id && 
+                            {parentComment?.id &&
                                 <div className=' flex justify-between text-sm px-3 pt-1 bg-gray-800 text-white  '>
                                     <p className='text-gray-400'>Reply to <span className='text-blue-600 text-md font-bold'>@{parentComment.userName}</span> </p>
                                     <button className='text-lg mr-3 font-bold '
@@ -301,12 +297,12 @@ export default function Movie() {
                                         onClick={() => setParentComment(comment)}> Reply</button>
 
 
-                                    {!showReplies[comment.id]  && comment.childrenCount > 0 && 
-                                    <button className='text-xs ml-6 text-gray-400'
-                                        onClick={() => { fetchChildComments(comment.id)}}
-                                    > see {comment.childrenCount}  more replies</button>}
+                                    {!showReplies[comment.id] && comment.childrenCount > 0 &&
+                                        <button className='text-xs ml-6 text-gray-400'
+                                            onClick={() => { fetchChildComments(comment.id) }}
+                                        > see {comment.childrenCount}  more replies</button>}
                                     {/* ------reply comment section     */}
-                                    {showReplies[comment.id]&&childComments[comment.id]  && childComments[comment.id].map(reply => (
+                                    {showReplies[comment.id] && childComments[comment.id] && childComments[comment.id].map(reply => (
                                         <div key={reply.id} className=' border border-gray-700 p-2 ml-5 bg-gray-800 my-2 rounded-tr-xl rounded-br-xl rounded-bl-xl'>
                                             <div className='flex  relative items-center justify-start mb-3'>
                                                 <img src={comment.userImageId ? `http://65.109.177.24:2024/api/user/profile-pic/${reply.userImageId}` : `/image/Frame.png`} alt=""
@@ -314,7 +310,7 @@ export default function Movie() {
                                                 <p className='text-md font-bold text-pink-600' >{reply.userName}</p>
                                                 {user === reply.userName &&
                                                     <button className='absolute right-4 top-2 text-red-600'
-                                                        onClick={() => removeComment(reply.id,comment.id)}>
+                                                        onClick={() => removeComment(reply.id, comment.id)}>
                                                         <Trash size='size-5' />
                                                     </button>}
 
