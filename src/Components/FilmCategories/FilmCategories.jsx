@@ -58,6 +58,7 @@ export default function FilmCategories({ title, endpoint, fetchMoviesFunction,ty
                         <PosterCard
                             key={movie.id}
                             movieobj={movie} // ارسال آبجکت فیلم به PosterCard
+                            type={type}
                             
                         />
                     ))

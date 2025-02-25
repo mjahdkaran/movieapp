@@ -1,16 +1,20 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export default function PosterCard({ movieobj,width='w-44' }) {
+export default function PosterCard({ movieobj,width='w-44' ,type}) {
 
     const navigate = useNavigate()
+
+    const navigateHandler=()=>{
+        type==='movie'?navigate('/m/' + movieobj.id, { state: movieobj.id }):navigate('/s/' + movieobj.id, { state: movieobj.id })
+    }
     // ساخت آدرس کامل برای تصویر
     const imageUrl = movieobj.backdrop_path
         ? `http://65.109.177.24:2024/api/file/image?size=w500&imgPath=${movieobj.backdrop_path}` // ترکیب URL پایه با مسیر تصویر
         : 'https://via.placeholder.com/500x750?text=No+Image'; // اگر تصویر وجود نداشت، یک تصویر پیش‌فرض نمایش می‌دهیم
 
     return (
-        <div className='flex flex-col mr-4' onClick={() => navigate('/m/' + movieobj.id, { state: movieobj.id })}>
+        <div className='flex flex-col mr-4' onClick={navigateHandler}>
             <div className={`relative h-56 ${width} md:h-56 md:w-44 rounded-md   `}>
 
                 {/* تصویر اصلی */}
