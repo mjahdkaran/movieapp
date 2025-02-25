@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { fetchMovieById, fetchGenreOfMovie, checkSavedMovie, saveMovieToPlaylist, removeMovieFromPlaylist, saveMovieToLikedList, removeMovieFromLikedList, checkLikedMovie } from '../../utils/api';
 import { useAuth } from '../../Context/AuthContext';
 import axios from 'axios';
-import MyComment from '../../Components/MyComment/MyComment';
+import AddComment from '../../Components/AddComment/AddComment';
 
 export default function Movie() {
     const [isSaved, setIsSaved] = useState(false);
@@ -229,7 +229,7 @@ export default function Movie() {
 
                 <div className='    rounded-sm p-2 w'>
                     {/* ------user comments------- */}
-                    <MyComment 
+                    <AddComment 
                     parentComment={parentComment}
                      setParentComment={setParentComment} 
                      movieId={movieId}
@@ -253,9 +253,6 @@ export default function Movie() {
                                                 onClick={() => removeComment(comment.id)}>
                                                 <Trash size='size-5' />
                                             </button>}
-
-
-
                                     </div>
                                     <p>{comment.description}</p>
                                     <button className='text-pink-600 text-xs font-bold'
