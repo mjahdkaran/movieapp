@@ -312,8 +312,8 @@ export default function Profile() {
             {/* modal */}
             {isShowModal&&
             <div className='fixed left-0 right-0 top-0 bottom-0 z-40 flex justify-center items-center bg-black bg-opacity-60 text-red-600'>
-            <div className='flex  flex-col md:w-1/3 w-full h-52 bg-white rounded-md '>
-            <div className='flex justify-between items-center  text-pink-600 px-4'> Change avatar
+            <div className='flex  flex-col md:w-1/3 w-80 h-52 bg-gray-700 rounded-md '>
+            <div className='flex justify-between items-center  text-pink-500 px-4'> Change avatar
                  <button className='font-extrabold text-xl'
                  onClick={()=>setIsShowModal(false)}>×</button></div>
                 <div className=' w-full'>
@@ -328,12 +328,12 @@ export default function Profile() {
 
                     {/* buttonContainer */}
                     <div className=' w-full flex justify-center'>
-                        <p className=' w-16 flex justify-center m-1 border   border-pink-600 text-pink-600  rounded-full p-1 hover:bg-pink-600 hover:text-white'>
+                        <p className=' w-16 flex justify-center m-1 border   border-pink-500 text-pink-500  rounded-full p-1 hover:bg-pink-500 hover:text-white'>
                             <input type='file' id='avatar' accept="image/*" className='hidden' onChange={selectImageHandler} ></input>
 
                             <label htmlFor='avatar' className='flex' ><Edit  />  </label>
                         </p>
-                        <button className=' flex  w-16  justify-center m-1 border  border-pink-600 text-pink-600  rounded-full p-1 hover:bg-pink-600 hover:text-white'
+                        <button className=' flex  w-16  justify-center m-1 border  border-pink-500 text-pink-500  rounded-full p-1 hover:bg-pink-600 hover:text-white'
                         onClick={deleteImage}
                         ><Trash/> </button>
                     </div>{/* buttonContainer */}
