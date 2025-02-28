@@ -3,7 +3,7 @@ import PageLayout from '../../Layout/PageLayout';
 import style from './MovieDetails.module.css';
 import { Back, Comment, Download, Heart, Save, Send, Trash } from '../../utils/icon';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { fetchMovieById, fetchGenreOfMovie, checkSavedMovie, saveMovieToPlaylist, removeMovieFromPlaylist, saveMovieToLikedList, removeMovieFromLikedList, checkLikedMovie } from '../../utils/api';
+import { fetchMovieById, checkSavedMovie,    checkLikedMovie, saveMovieTolist, removeMovieFromList } from '../../utils/api';
 import { useAuth } from '../../Context/AuthContext';
 import axios from 'axios';
 import CommentSection from '../../Components/CommentSection/CommentSection';
@@ -50,9 +50,9 @@ export default function Movie() {
         const fetchData = async () => {
             if (!details?.id) return;
             try {
-                const isMovieSaved = await checkSavedMovie(token, details.id,1);
+                const isMovieSaved = await checkSavedMovie(token, details.id, 1);
                 setIsSaved(isMovieSaved);
-                const isMovieLiked = await checkLikedMovie(token, details.id,1);
+                const isMovieLiked = await checkLikedMovie(token, details.id, 1);
                 setIsLiked(isMovieLiked);
             } catch (error) {
                 console.error('Error checking saved/liked status:', error);
@@ -94,7 +94,7 @@ export default function Movie() {
 
     const saveMovie = async () => {
         try {
-            const success = await saveMovieToPlaylist(token, details.id,1);
+            const success = await saveMovieTolist(token, 2,details.id, 1);
             if (success) setIsSaved(true);
         } catch (error) {
             console.error('Failed to save movie:', error);
@@ -103,7 +103,7 @@ export default function Movie() {
 
     const removeMovie = async () => {
         try {
-            const success = await removeMovieFromPlaylist(token, details.id,1);
+            const success = await removeMovieFromList(token, 2,details.id, 1);
             if (success) setIsSaved(false);
         } catch (error) {
             console.error('Failed to remove movie:', error);
@@ -112,7 +112,7 @@ export default function Movie() {
 
     const likeMovie = async () => {
         try {
-            const success = await saveMovieToLikedList(token, details.id,1);
+            const success = await saveMovieTolist(token, 1,details.id, 1);
             if (success) setIsLiked(true);
         } catch (error) {
             console.error('Failed to like movie:', error);
@@ -121,7 +121,7 @@ export default function Movie() {
 
     const unLikeMovie = async () => {
         try {
-            const success = await removeMovieFromLikedList(token, details.id,1);
+            const success = await removeMovieFromList(token, 1,details.id, 1);
             if (success) setIsLiked(false);
         } catch (error) {
             console.error('Failed to remove liked movie:', error);
@@ -210,26 +210,28 @@ export default function Movie() {
                 <div className='    rounded-sm p-2 w'>
                     {/* ------Add comments------- */}
 
-                    <AddComment 
-                    parentComment={parentComment}
-                     setParentComment={setParentComment} 
-                     movieId={movieId}
-                      setAllCommentsArray={setAllCommentsArray}
-                      fetchComments={fetchComments}
-                      fetchChildComments={fetchChildComments}
-                       />
-                    {/* ------user comments------- */}
-                   
+                    <AddComment
+                        parentComment={parentComment}
+                        setParentComment={setParentComment}
+                        movieId={movieId}
+                        setAllCommentsArray={setAllCommentsArray}
+                        fetchComments={fetchComments}
+                        fetchChildComments={fetchChildComments}
+                    />
+                    {/* ------Add comments------- */}
+
+                    {/* ------users comments------ */}
                     <div className=''>
-                 <CommentSection
-                 allCommentsArray={allCommentsArray}
-                 fetchComments={fetchComments}
-                 fetchChildComments={fetchChildComments}
-                 setParentComment={setParentComment}
-                 showReplies={showReplies}
-                 childComments={childComments}
-                 />
+                        <CommentSection
+                            allCommentsArray={allCommentsArray}
+                            fetchComments={fetchComments}
+                            fetchChildComments={fetchChildComments}
+                            setParentComment={setParentComment}
+                            showReplies={showReplies}
+                            childComments={childComments}
+                        />
                     </div>
+                    {/* ------users comments------ */}
 
                 </div>
             </div>

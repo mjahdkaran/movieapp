@@ -11,7 +11,7 @@ import FallBackComponent from './Pages/Error';
 import WhatchList from './Pages/WhatchList/WhatchList';
 import FavoriteList from './Pages/FavoriteList/FavoriteList';
 import Profile from './Pages/Profile/Profile';
-import SeriesDetail from './Components/SeriesDetail/SeriesDetail';
+import SeriesDetail from './Pages/SeriesDetail/SeriesDetail';
 export default function routes() {
     return (
         <Routes>
