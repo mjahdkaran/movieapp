@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import PageLayout from '../../Layout/PageLayout';
 import { useNavigate } from 'react-router-dom';
-import { fetchMovieById, fetchSeriesById, getLikedList, getList, removeMovieFromLikedList } from '../../utils/api';
+import { fetchMovieById, fetchSeriesById,  getList, removeMovieFromLikedList } from '../../utils/api';
 import { useAuth } from '../../Context/AuthContext';
 import { Trash } from '../../utils/icon';
 
@@ -32,7 +32,7 @@ export default function FavoriteList() {
         }
         fetchData()
     }, [token])
-    //پیدا کردن آبجکت هر فیلم
+    // 📌 گرفتن جزئیات فیلم‌ها
 
     useEffect(() => {
         if (likedListArr.length === 0) return;
@@ -102,7 +102,8 @@ export default function FavoriteList() {
                  md:justify-start w-screen   overflow-x-hidden '>
                             {movieDetailsArr.map(movie => (
 
-                                <div key={`${movie.movieType}-${movie.id}`} className=' cursor-pointer relative w-32 sm:w-60  rounded-md m-5 mb-20  overflow-hidden'
+                                <div key={`${movie.movieType}-${movie.id}`}
+                                 className=' cursor-pointer relative w-32 sm:w-60  rounded-md m-5 mb-20  overflow-hidden'
                                     onClick={() => {
                                         movie.movieType===1?navigate('/m/' + movie.id, { state: movie.id }):navigate('/s/' + movie.id, { state: movie.id }
                                         )

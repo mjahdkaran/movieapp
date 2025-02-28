@@ -1,25 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import PageLayout from '../../Layout/PageLayout';
 import { Trash } from '../../utils/icon';
-import { getPlayList, fetchMovieById, removeMovieFromPlaylist } from '../../utils/api';
+import { fetchMovieById, fetchSeriesById, getList, removeMovieFromPlaylist } from '../../utils/api';
 import { useAuth } from '../../Context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 export default function WhatchList() {
     const { token } = useAuth();
+    const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
     const [playListArr, setPlayListArr] = useState([]);
     const [movieDetailsArr, setMovieDetailsArr] = useState([]);
-    const navigate = useNavigate();
-
-    // 📌 گرفتن پلی‌لیست
+    const [moviesList, setMoviesList] = useState([])
+    const [seriesList, setSeriesList] = useState([])
+    //  گرفتن پلی‌لیست
     useEffect(() => {
         if (!token) return;
 
         const fetchData = async () => {
             try {
                 setIsLoading(true);
-                const playList = await getPlayList(token);
+                const playList = await getList(token, 2);
+                setSeriesList(playList.filter(movie => movie.movieType === 2))
+                setMoviesList(playList.filter(movie => movie.movieType === 1))
                 setPlayListArr(playList);
             } catch (error) {
                 console.error('Error getting playlist:', error);
@@ -39,16 +42,29 @@ export default function WhatchList() {
         }
 
         const fetchMovieDetails = async () => {
+
             try {
-                setIsLoading(true);
-                const details = await Promise.all(playListArr.map(id => fetchMovieById(id)));
-                setMovieDetailsArr(details);
-            } catch (error) {
-                console.error('Error fetching movie details:', error);
-            } finally {
-                setIsLoading(false);
+                const seriesDetail = await Promise.all(seriesList.map(async (movie) => {
+                    const fetcheSeries = await fetchSeriesById(movie.id)
+                    return { ...fetcheSeries, movieType: 2 }
+                }))
+                const moviesDetail = await Promise.all(moviesList.map(async (movie) => {
+                    const fetchMovies = await fetchMovieById(movie.id)
+                    return { ...fetchMovies, movieType: 1 }
+                }))
+
+                const allMoviesDetail = [...moviesDetail, ...seriesDetail]
+                console.log('allMoviesDetail', allMoviesDetail)
+                setMovieDetailsArr(allMoviesDetail)
+
+
             }
-        };
+
+            catch (error) {
+                console.error('Error fetching movie details in FavoritList components', error)
+
+            }
+        }
 
         fetchMovieDetails();
     }, [playListArr]);
@@ -91,11 +107,15 @@ export default function WhatchList() {
                     <div className='flex-1 flex flex-wrap justify-center md:justify-start w-screen overflow-x-hidden'>
                         {movieDetailsArr.map(movie => (
                             <div
-                                key={movie.id}
+                                key={`${movie.movieType}-${movie.id}`}
                                 className='relative w-32 sm:w-60 rounded-md m-5 mb-20 overflow-hidden cursor-pointer'
-                                onClick={() => navigate('/m/' + movie.id, { state: movie.id })}
-                            >
-                                <div className='w-full h-32 md:h-80 object-cover'>
+                                onClick={() => {
+                                    movie.movieType === 1 ? navigate('/m/' + movie.id, { state: movie.id }) : navigate('/s/' + movie.id, { state: movie.id }
+                                    )
+                                }}                            >
+                                <div className='relative w-full h-32 md:h-80 object-cover'>
+                                    <p className='absolute bottom-0 left-0 px-1 rounded-sm bg-pink-950 text-sm text-white'>{movie.movieType === 1 ? 'movie' : 'series'}</p>
+
                                     <img
                                         src={`http://65.109.177.24:2024/api/file/image?size=w500&imgPath=${movie.backdrop_path}`}
                                         alt={movie.title}
@@ -104,7 +124,7 @@ export default function WhatchList() {
                                 </div>
 
                                 <div className='flex justify-between items-center py-1 px-2 text-white bg-gray-950 rounded-br-md h-14 text-xs md:py-2 md:px-3 md:h-20 md:text-lg'>
-                                    <p className='flex flex-wrap w-5/6'>{movie.title}</p>
+                                    <p className='flex flex-wrap w-5/6'>{movie.title||movie.name}</p>
                                     <button
                                         className='hover:bg-pink-300 text-pink-600 rounded-full'
                                         onClick={(e) => removeMovie(movie.id, e)}
