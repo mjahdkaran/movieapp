@@ -6,6 +6,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { fetchMovieById, fetchGenreOfMovie, checkSavedMovie, saveMovieToPlaylist, removeMovieFromPlaylist, saveMovieToLikedList, removeMovieFromLikedList, checkLikedMovie } from '../../utils/api';
 import { useAuth } from '../../Context/AuthContext';
 import axios from 'axios';
+import CommentSection from '../../Components/CommentSection/CommentSection';
+import AddComment from '../../Components/AddComment/AddComment';
 
 export default function Movie() {
     const [isSaved, setIsSaved] = useState(false);
@@ -13,12 +15,12 @@ export default function Movie() {
     const [showReplies, setShowReplies] = useState({}); // وضعیت نمایش کامنت‌های فرزند
     const [thisMovieGenre, setThisMovieGenre] = useState([]);
     const [details, setDetails] = useState(null);
-    const [comment, setComment] = useState('');
+    const [comment] = useState('');
     const [allCommentsArray, setAllCommentsArray] = useState([])
     const [childComments, setChildComments] = useState({}); // کامنت‌های فرزند هر کامنت
 
     const [parentComment, setParentComment] = useState({})
-    const { token, user, userImage } = useAuth();
+    const { token } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
     const movieId = location.state;
@@ -87,7 +89,7 @@ export default function Movie() {
             console.error('Error getting child comments', error)
         }
     }
-    //---------------
+
     const addComment = async () => {
         if (!comment) return;
         try {
@@ -132,7 +134,6 @@ export default function Movie() {
         }
 
     }
-    //-----------
 
     const saveMovie = async () => {
         try {
@@ -251,91 +252,26 @@ export default function Movie() {
 
                 <div className='    rounded-sm p-2 w'>
                     {/* ------user comments------- */}
-                    <div className='  flex items-center fixed  left-0 right-0 bottom-0 p-2    bg-black bg-opacity-35 z-10'>
 
-                        <img src={userImage ? `http://65.109.177.24:2024/api/user/profile-pic/${userImage}` : "/image/Frame.png"} alt="" className='h-10 w-10  rounded-full object-cover mx-2' />
-                        <div className='  flex  flex-col border rounded-full bg-black  overflow-hidden w-full md:w-1/2 '>
-                            {/* زمان جواب دادن به یک کامنت نشان داده شود  */}
-                            {parentComment?.id &&
-                                <div className=' flex justify-between text-sm px-3 pt-1 bg-gray-800 text-white  '>
-                                    <p className='text-gray-400'>Reply to <span className='text-blue-600 text-md font-bold'>@{parentComment.userName}</span> </p>
-                                    <button className='text-lg mr-3 font-bold '
-                                        onClick={() => setParentComment(null)}>×</button> </div>
-
-                            }
-                            <input type="text" name="" id="" placeholder='add your comment...'
-                                value={comment}
-                                onChange={(e) => { setComment(e.target.value) }}
-                                onKeyDown={(e) => e.key === "Enter" && addComment()}
-                                className='   bg-inherit outline-none    px-3 py-1' />
-                        </div>
-                        <button className='text-pink-600'
-                            onClick={addComment}
-
-                        ><Send /></button>
-                    </div>
+                    <AddComment 
+                    parentComment={parentComment}
+                     setParentComment={setParentComment} 
+                     movieId={movieId}
+                      setAllCommentsArray={setAllCommentsArray}
+                      fetchComments={fetchComments}
+                      fetchChildComments={fetchChildComments}
+                       />
+                    {/* ------user comments------- */}
+                   
                     <div className=''>
-                        {/* other user comment */}
-                        {!allCommentsArray.length > 0 ? <p className='  text-white flex justify-center'>No comment yet! Be the first one</p> :
-                            allCommentsArray.map(comment => (
-                                <div key={comment.id} className=' border-b p-2 bg-gray-900 my-2'>
-                                    <div className='flex  relative items-center justify-start mb-3'>
-                                        <img src={comment.userImageId ? `http://65.109.177.24:2024/api/user/profile-pic/${comment.userImageId}` : `/image/Frame.png`} alt=""
-                                            className='h-8 w-8 rounded-full mx-2 object-cover' />
-                                        <p className='text-md font-bold text-pink-600' >{comment.userName}</p>
-                                        {user === comment.userName &&
-                                            <button className='absolute right-4 top-2 text-red-600'
-                                                onClick={() => removeComment(comment.id)}>
-                                                <Trash size='size-5' />
-                                            </button>}
-
-
-
-                                    </div>
-                                    <p>{comment.description}</p>
-                                    <button className='text-pink-600 text-xs font-bold'
-                                        onClick={() => setParentComment(comment)}> Reply</button>
-
-
-                                    {!showReplies[comment.id] && comment.childrenCount > 0 &&
-                                        <button className='text-xs ml-6 text-gray-400'
-                                            onClick={() => { fetchChildComments(comment.id) }}
-                                        > see {comment.childrenCount}  more replies</button>}
-                                    {/* ------reply comment section     */}
-                                    {showReplies[comment.id] && childComments[comment.id] && childComments[comment.id].map(reply => (
-                                        <div key={reply.id} className=' border border-gray-700 p-2 ml-5 bg-gray-800 my-2 rounded-tr-xl rounded-br-xl rounded-bl-xl'>
-                                            <div className='flex  relative items-center justify-start mb-3'>
-                                                <img src={comment.userImageId ? `http://65.109.177.24:2024/api/user/profile-pic/${reply.userImageId}` : `/image/Frame.png`} alt=""
-                                                    className='h-8 w-8 rounded-full mx-2 object-cover' />
-                                                <p className='text-md font-bold text-pink-600' >{reply.userName}</p>
-                                                {user === reply.userName &&
-                                                    <button className='absolute right-4 top-2 text-red-600'
-                                                        onClick={() => removeComment(reply.id, comment.id)}>
-                                                        <Trash size='size-5' />
-                                                    </button>}
-
-
-
-                                            </div>
-                                            <p>{reply.description}</p>
-                                            {/* <button className='text-pink-600 text-xs font-bold'
-                                                onClick={() => setParentComment(reply)}>  Reply</button> */}
-                                        </div>
-
-
-                                    ))
-
-                                    }
-
-
-
-
-                                </div>
-                            ))}
-                        {/* reply comment section  */}
-
-                        {/* other user comment */}
-
+                 <CommentSection
+                 allCommentsArray={allCommentsArray}
+                 fetchComments={fetchComments}
+                 fetchChildComments={fetchChildComments}
+                 setParentComment={setParentComment}
+                 showReplies={showReplies}
+                 childComments={childComments}
+                 />
                     </div>
 
                 </div>
