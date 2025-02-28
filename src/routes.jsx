@@ -11,11 +11,13 @@ import FallBackComponent from './Pages/Error';
 import WhatchList from './Pages/WhatchList/WhatchList';
 import FavoriteList from './Pages/FavoriteList/FavoriteList';
 import Profile from './Pages/Profile/Profile';
+import SeriesDetail from './Components/SeriesDetail/SeriesDetail';
 export default function routes() {
     return (
         <Routes>
             <Route path='' element={<Movies />} />
             <Route path="/m/:id" element={<MovieDetails />} />
+            <Route path='/s/:id' element={<SeriesDetail />} />
             <Route path='/:category' element={<CategoryPage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />

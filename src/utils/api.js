@@ -18,6 +18,7 @@ export  const fetchMovieByCategory=async(category,page=1)=>{
                 page,
             }
         })
+        console.log('movies',response.data.results )
         return response.data.results || []
     } catch (error) {
         console.log(`error fetching ${category} movies: `, error);
@@ -33,12 +34,46 @@ export  const fetchMovieById=async(movieId)=>{
                 Authorization:API_KEY
             }
         })
+        console.log('movieDetails:',response.data)
         return response.data||{}
     } catch (error) {
         console.error('fetchMovieById error')
     }
 }
+// Series
+export  const fetchSeriesByCategory=async(category,page=1)=>{
+    try {
+        const response=await ApiClient.get(`tv/${category}`,{
+            params:{
+                language: 'en-US',
+                page,
+            }
+        })
+        // console.log('series',response.data.results)
+        console.log('series',response.data.results)
 
+        return response.data.results || []
+    } catch (error) {
+        console.log(`error fetching ${category} movies: `, error);
+        return []
+    }
+    
+}
+//گرفتن جزئیات هر سریال با آی دی 
+export  const fetchSeriesById=async(movieId)=>{
+    try {
+        const response= await axios.get(`https://api.themoviedb.org/3/tv/${movieId}?language=en-US`,{
+            headers:{'content-type': 'application/json',
+                Authorization:API_KEY
+            }
+        })
+        console.log('SeriesDetails:',response.data)
+        return response.data||{}
+    } catch (error) {
+        console.error('fetchMovieById error')
+    }
+}
+//-------------------------------
 export const fetchGenreOfMovie=async()=>{
 try{
     const response=await ApiClient.get('genre/movie/list',{
