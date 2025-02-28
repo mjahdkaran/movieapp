@@ -9,6 +9,21 @@ const ApiClient=axios.create({
         Authorization:API_KEY,
     }
 })
+export const fetchGenreOfMovie=async()=>{
+    try{
+        const response=await ApiClient.get('genre/movie/list',{
+            params:{
+                language:'en'
+            }
+        })
+    
+        return response.data.genres || []
+    }
+    catch(error){
+    console.log(`error fetching movie genre:`,error);
+    return []
+    }
+    }
 
 export  const fetchMovieByCategory=async(category,page=1)=>{
     try {

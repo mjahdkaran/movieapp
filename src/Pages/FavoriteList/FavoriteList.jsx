@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import PageLayout from '../../Layout/PageLayout';
 import { useNavigate } from 'react-router-dom';
-import { fetchMovieById, fetchSeriesById,  getList, removeMovieFromLikedList, removeMovieFromList } from '../../utils/api';
+import { fetchMovieById, fetchSeriesById,  getList, removeMovieFromList } from '../../utils/api';
 import { useAuth } from '../../Context/AuthContext';
 import { Trash } from '../../utils/icon';
 
