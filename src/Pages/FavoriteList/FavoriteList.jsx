@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import PageLayout from '../../Layout/PageLayout';
 import { useNavigate } from 'react-router-dom';
-import { fetchMovieById, getLikedList, removeMovieFromLikedList } from '../../utils/api';
+import { fetchMovieById, fetchSeriesById, getLikedList, getList, removeMovieFromLikedList } from '../../utils/api';
 import { useAuth } from '../../Context/AuthContext';
 import { Trash } from '../../utils/icon';
 
@@ -11,12 +11,17 @@ export default function FavoriteList() {
     const [isLoading, setIsLoading] = useState(true)
     const [likedListArr, setLikeListArr] = useState([])
     const [movieDetailsArr, setMovieDetailsArr] = useState([])
+    const [moviesList, setMoviesList] = useState([])
+    const [seriesList, setSeriesList] = useState([])
+
     // گرفتن لایک لیست 
     useEffect(() => {
         const fetchData = async () => {
             setIsLoading(true)
             try {
-                const likedList = await getLikedList(token)
+                const likedList = await getList(token, 1)
+                setSeriesList(likedList.filter(movie => movie.movieType === 2))
+                setMoviesList(likedList.filter(movie => movie.movieType === 1))
                 setLikeListArr(likedList)
             } catch (error) {
                 console.error('Error fetching liked list in FavoritList components', error)
@@ -35,8 +40,19 @@ export default function FavoriteList() {
         const fetchMovieDetails = async () => {
 
             try {
-                const details = await Promise.all(likedListArr.map(id => fetchMovieById(id)))
-                setMovieDetailsArr(details)
+                const seriesDetail = await Promise.all(seriesList.map(async (movie) => {
+                    const fetcheSeries = await fetchSeriesById(movie.id)
+                    return { ...fetcheSeries, movieType: 2 }
+                }))
+                const moviesDetail = await Promise.all(moviesList.map(async (movie) => {
+                    const fetchMovies = await fetchMovieById(movie.id)
+                    return { ...fetchMovies, movieType: 1 }
+                }))
+
+                const allMoviesDetail = [...moviesDetail, ...seriesDetail]
+                console.log('allMoviesDetail', allMoviesDetail)
+                setMovieDetailsArr(allMoviesDetail)
+
 
             }
 
@@ -79,19 +95,22 @@ export default function FavoriteList() {
                     <p className='text-center text-white'>Loading...</p>
 
                 </div>) :
-                    (movieDetailsArr.length === 0 ? 
-                        (<p className='text-center text-white mt-20' >Your Favorit List is empty.</p>) :
+                    (likedListArr.length === 0 ?
+                        (<p className='text-center text-white mt-20 ' >Your Favorit List is empty.</p>) :
 
-                        <div className=' flex-1 flex flex-wrap  justify-center
+                        <div className=' flex-1 flex flex-wrap  justify-center 
                  md:justify-start w-screen   overflow-x-hidden '>
                             {movieDetailsArr.map(movie => (
 
-                                <div key={movie.id} className='  relative w-32 sm:w-60  rounded-md m-5 mb-20  overflow-hidden'
+                                <div key={`${movie.movieType}-${movie.id}`} className=' cursor-pointer relative w-32 sm:w-60  rounded-md m-5 mb-20  overflow-hidden'
                                     onClick={() => {
-                                        navigate('/m/' + movie.id, { state: movie.id })
+                                        movie.movieType===1?navigate('/m/' + movie.id, { state: movie.id }):navigate('/s/' + movie.id, { state: movie.id }
+                                        )
                                     }}
                                 >
-                                    <div className='w-full h-32 md:h-80 object-cover  '>
+                                    <div className='relative w-full h-32 md:h-80 object-cover  '>
+                                    <p className='absolute bottom-0 left-0 px-1 rounded-sm bg-pink-950 text-sm text-white'>{movie.movieType === 1 ? 'movie' : 'series'}</p>
+
                                         <img src={`http://65.109.177.24:2024/api/file/image?size=w500&imgPath=${movie.backdrop_path}`} alt=""
                                             className='w-full h-full overflow-hidden  object-cover '
                                         />
@@ -100,7 +119,9 @@ export default function FavoriteList() {
 
                                     <div className='flex justify-between items-center py-1 px-2  text-white bg-gray-950 rounded-br-md  h-14 text-xs
                               md:py-2 md:px-3 md:h-20 md:text-lg'>
-                                        <p className='flex flex-wrap w-5/6 '>{movie.title}</p>
+
+                                        <p className=' flex flex-wrap w-5/6 '>{movie.title || movie.name}</p>
+
                                         <button className='hover:bg-pink-300 text-pink-600 rounded-full'
                                             onClick={(e) => {
                                                 removeMovie(movie.id, e);  // پاس دادن e به removeMovie

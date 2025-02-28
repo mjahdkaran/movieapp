@@ -236,6 +236,26 @@ export const  getLikedList=async(token)=>{
         throw error;
     }
     }
+///****************************************************** */
+    //----تغییر روش گرفتن لیست لایک و سیو شده ها 
+                 //listType => playlist=2/liked=1
+
+    export const  getList=async(token,listType)=>{
+        try{
+            const response=await axios.get(`${API_Base_URL_AMIR}playlist/${listType}/movies`,{  headers: {
+                'authorization': `Bearer ${token}`,
+            },
+        });
+        console.log('data',response.data)
+        return response.data
+        }catch(error){ 
+            console.error('Error getting LikedList :', error);
+            throw error;
+        }
+        }
+    //----تغییر روش گرفتن لیست لایک و سیو شده ها 
+///****************************************************** */
+
 
 //گرفتن اطلاعات کاربر
 export const getCurrentUser=async(token)=>{

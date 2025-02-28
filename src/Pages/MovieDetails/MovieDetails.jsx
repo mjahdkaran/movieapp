@@ -3,7 +3,7 @@ import PageLayout from '../../Layout/PageLayout';
 import style from './MovieDetails.module.css';
 import { Back, Comment, Download, Heart, Save, Send, Trash } from '../../utils/icon';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { fetchMovieById, checkSavedMovie,    checkLikedMovie, saveMovieTolist, removeMovieFromList, checkSavedOrLiked } from '../../utils/api';
+import { fetchMovieById    , saveMovieTolist, removeMovieFromList, checkSavedOrLiked } from '../../utils/api';
 import { useAuth } from '../../Context/AuthContext';
 import axios from 'axios';
 import CommentSection from '../../Components/CommentSection/CommentSection';
