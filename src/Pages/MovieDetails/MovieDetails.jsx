@@ -3,7 +3,7 @@ import PageLayout from '../../Layout/PageLayout';
 import style from './MovieDetails.module.css';
 import { Back, Comment, Download, Heart, Save, Send, Trash } from '../../utils/icon';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { fetchMovieById, checkSavedMovie,    checkLikedMovie, saveMovieTolist, removeMovieFromList } from '../../utils/api';
+import { fetchMovieById, checkSavedMovie,    checkLikedMovie, saveMovieTolist, removeMovieFromList, checkSavedOrLiked } from '../../utils/api';
 import { useAuth } from '../../Context/AuthContext';
 import axios from 'axios';
 import CommentSection from '../../Components/CommentSection/CommentSection';
@@ -50,9 +50,9 @@ export default function Movie() {
         const fetchData = async () => {
             if (!details?.id) return;
             try {
-                const isMovieSaved = await checkSavedMovie(token, details.id, 1);
+                const isMovieSaved = await checkSavedOrLiked(token, 2,details.id, 1);
                 setIsSaved(isMovieSaved);
-                const isMovieLiked = await checkLikedMovie(token, details.id, 1);
+                const isMovieLiked = await checkSavedOrLiked(token, 1,details.id, 1);
                 setIsLiked(isMovieLiked);
             } catch (error) {
                 console.error('Error checking saved/liked status:', error);

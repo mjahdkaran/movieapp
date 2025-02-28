@@ -184,22 +184,22 @@ export const removeMovieFromList = async (token,listType,movieId,movietype) => {
 
 // اضافه و حذف کردن فیلم ها از playList & liked
 //--------------*******************---------------------------------
-
+//حذفشود
 //این درخواست برای بررسی فیلم های لایک شده است
-export const  checkLikedMovie=async(token,movieId,movieType)=>{
-    try {
-        const response= await axios.get(`${API_Base_URL_AMIR}playlist/1/movies`,{
-            headers:{
-                Authorization:`Bearer ${token}`
-            }
-        });
-        const result=response.data.map(obj=>(obj.movieType===movieType&&obj.id)).includes(movieId)
-       return result
-    } catch (error) {
-        console.error('Failed to check Liked movie',error);
-        throw error;
-    }
-}
+// export const  checkLikedMovie=async(token,movieId,movieType)=>{
+//     try {
+//         const response= await axios.get(`${API_Base_URL_AMIR}playlist/1/movies`,{
+//             headers:{
+//                 Authorization:`Bearer ${token}`
+//             }
+//         });
+//         const result=response.data.map(obj=>(obj.movieType===movieType&&obj.id)).includes(movieId)
+//        return result
+//     } catch (error) {
+//         console.error('Failed to check Liked movie',error);
+//         throw error;
+//     }
+// }
 //----------*****************************-----------------
 // تغییر شیوه چک کردن لایک شدن یا سیو شدن  فیلم ها
                  //listType => playlist=2/liked=1
