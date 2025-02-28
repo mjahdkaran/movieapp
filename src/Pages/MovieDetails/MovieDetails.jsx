@@ -50,9 +50,9 @@ export default function Movie() {
         const fetchData = async () => {
             if (!details?.id) return;
             try {
-                const isMovieSaved = await checkSavedMovie(token, details.id);
+                const isMovieSaved = await checkSavedMovie(token, details.id,1);
                 setIsSaved(isMovieSaved);
-                const isMovieLiked = await checkLikedMovie(token, details.id);
+                const isMovieLiked = await checkLikedMovie(token, details.id,1);
                 setIsLiked(isMovieLiked);
             } catch (error) {
                 console.error('Error checking saved/liked status:', error);
@@ -90,54 +90,11 @@ export default function Movie() {
         }
     }
 
-    const addComment = async () => {
-        if (!comment) return;
-        try {
-            const response = await axios.post('http://65.109.177.24:2024/api/comment', {
-                "movieId": movieId,
-                "Description": comment,
-                "parentId": parentComment?.id || null
-            }, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
-            console.log('added comment successfully');
 
-
-            setComment('')
-            setParentComment(null)
-            if (parentComment?.id) {
-                fetchChildComments(parentComment.id);
-            } else {
-                fetchComments(); // کامنت‌های اصلی را آپدیت کن
-            }
-
-        } catch (error) {
-            console.log('add Comment failed', error)
-
-        }
-    }
-    const removeComment = async (id, parentId = null) => {
-        try {
-            const response = await axios.delete(`http://65.109.177.24:2024/api/comment/${id}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            })
-            console.log('remove comment succesfully')
-            if (!parentId) {
-                fetchComments();
-            } else {
-                fetchChildComments(parentId);
-            }
-        } catch (error) {
-            console.error('error removing comment ', error)
-        }
-
-    }
 
     const saveMovie = async () => {
         try {
-            const success = await saveMovieToPlaylist(token, details.id);
+            const success = await saveMovieToPlaylist(token, details.id,1);
             if (success) setIsSaved(true);
         } catch (error) {
             console.error('Failed to save movie:', error);
@@ -146,7 +103,7 @@ export default function Movie() {
 
     const removeMovie = async () => {
         try {
-            const success = await removeMovieFromPlaylist(token, details.id);
+            const success = await removeMovieFromPlaylist(token, details.id,1);
             if (success) setIsSaved(false);
         } catch (error) {
             console.error('Failed to remove movie:', error);
@@ -155,7 +112,7 @@ export default function Movie() {
 
     const likeMovie = async () => {
         try {
-            const success = await saveMovieToLikedList(token, details.id);
+            const success = await saveMovieToLikedList(token, details.id,1);
             if (success) setIsLiked(true);
         } catch (error) {
             console.error('Failed to like movie:', error);
@@ -164,7 +121,7 @@ export default function Movie() {
 
     const unLikeMovie = async () => {
         try {
-            const success = await removeMovieFromLikedList(token, details.id);
+            const success = await removeMovieFromLikedList(token, details.id,1);
             if (success) setIsLiked(false);
         } catch (error) {
             console.error('Failed to remove liked movie:', error);
