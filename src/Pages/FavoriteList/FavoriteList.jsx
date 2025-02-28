@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import PageLayout from '../../Layout/PageLayout';
 import { useNavigate } from 'react-router-dom';
-import { fetchMovieById, fetchSeriesById,  getList, removeMovieFromLikedList } from '../../utils/api';
+import { fetchMovieById, fetchSeriesById,  getList, removeMovieFromLikedList, removeMovieFromList } from '../../utils/api';
 import { useAuth } from '../../Context/AuthContext';
 import { Trash } from '../../utils/icon';
 
@@ -62,14 +62,14 @@ export default function FavoriteList() {
             }
         }
         fetchMovieDetails()
-    }, [likedListArr])
+    }, [seriesList,moviesList])
 
-    const removeMovie = async (movieid, e) => {
+    const removeMovie = async (movieid,movieType, e) => {
         e.stopPropagation();
         try {
-            await removeMovieFromLikedList(token, movieid)
-            setLikeListArr(prev => prev.filter(id => id !== movieid));
-            setMovieDetailsArr(prev => prev.filter(movie => movie.id !== movieid))
+            await removeMovieFromList(token,1, movieid,movieType)
+            setLikeListArr(prev => prev.filter(movie => movie.id !== movieid &&movie.movieType !== movieType));
+            setMovieDetailsArr(prev => prev.filter(movie => movie.id !== movieid&&movie.movieType !== movieType))
         } catch (error) {
             console.error('failed to remove movie in FavoritList components', error)
         }
@@ -125,7 +125,7 @@ export default function FavoriteList() {
 
                                         <button className='hover:bg-pink-300 text-pink-600 rounded-full'
                                             onClick={(e) => {
-                                                removeMovie(movie.id, e);  // پاس دادن e به removeMovie
+                                                removeMovie(movie.id,movie.movieType, e);  // پاس دادن e به removeMovie
                                             }}
                                         ><Trash /></button>
 

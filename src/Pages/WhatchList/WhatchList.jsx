@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PageLayout from '../../Layout/PageLayout';
 import { Trash } from '../../utils/icon';
-import { fetchMovieById, fetchSeriesById, getList, removeMovieFromPlaylist } from '../../utils/api';
+import { fetchMovieById, fetchSeriesById, getList, removeMovieFromList, removeMovieFromPlaylist } from '../../utils/api';
 import { useAuth } from '../../Context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -67,13 +67,13 @@ export default function WhatchList() {
         }
 
         fetchMovieDetails();
-    }, [playListArr]);
+    }, [seriesList,moviesList]);
 
     // 📌 حذف فیلم از پلی‌لیست
-    const removeMovie = async (movieId, e) => {
+    const removeMovie = async (movieId, movieType,e) => {
         e.stopPropagation();
         try {
-            await removeMovieFromPlaylist(token, movieId);
+            await removeMovieFromList(token, 2,movieId,movieType);
             setPlayListArr(prev => prev.filter(id => id !== movieId));
             setMovieDetailsArr(prev => prev.filter(movie => movie.id !== movieId));
         } catch (error) {
@@ -127,7 +127,7 @@ export default function WhatchList() {
                                     <p className='flex flex-wrap w-5/6'>{movie.title||movie.name}</p>
                                     <button
                                         className='hover:bg-pink-300 text-pink-600 rounded-full'
-                                        onClick={(e) => removeMovie(movie.id, e)}
+                                        onClick={(e) => removeMovie(movie.id, movie.movieType,e)}
                                     >
                                         <Trash />
                                     </button>
