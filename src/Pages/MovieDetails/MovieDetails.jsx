@@ -208,7 +208,7 @@ export default function Movie() {
                 <p className=' flex  w-full px-5 py-5 text-md md:text-xl font-bold text-pink-600'> <span className='px-3'><Comment /></span>    Comments</p>
 
                 <div className='    rounded-sm p-2 w'>
-                    {/* ------user comments------- */}
+                    {/* ------Add comments------- */}
 
                     <AddComment 
                     parentComment={parentComment}
