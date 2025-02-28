@@ -74,24 +74,6 @@ export  const fetchSeriesById=async(movieId)=>{
     }
 }
 //-------------------------------
-export const fetchGenreOfMovie=async()=>{
-try{
-    const response=await ApiClient.get('genre/movie/list',{
-        params:{
-            language:'en'
-        }
-    })
-
-    return response.data.genres || []
-}
-catch(error){
-console.log(`error fetching movie genre:`,error);
-return []
-}
-}
-
-
-
 export const fetchLanguages=async()=>{
     try {
         const response=await ApiClient.get('/configuration/languages ',{  headers: {
@@ -108,10 +90,10 @@ export const fetchLanguages=async()=>{
 
 
 
-// اضافه و حذف کردن فیلم ها از playList & liked
-                //listType => playlist=2/liked=1
-                //movietype => series=2/movie=1
-//----- اضافه کردن
+                
+//-----  اضافه کردن فیلم به لیست------------
+//listType => playlist=2/liked=1
+ //movietype => series=2/movie=1
 export const  saveMovieTolist=async(token,listType,movieId,movietype)=>{
     try {
         const response = await fetch(`${API_Base_URL_AMIR}playlist/import-movie`, {
@@ -132,7 +114,7 @@ export const  saveMovieTolist=async(token,listType,movieId,movietype)=>{
         throw error;
     }
 }
-//-------- حذف کردن
+//-------- حذف کردن فیلم از لیست ها-----------
 export const removeMovieFromList = async (token,listType,movieId,movietype) => {
     try {
         const response = await fetch(`${API_Base_URL_AMIR}playlist/remove-movie`, {
@@ -157,7 +139,7 @@ export const removeMovieFromList = async (token,listType,movieId,movietype) => {
 
 
 // چک کردن لایک شدن یا سیو شدن  فیلم ها
-                 //listType => playlist=2/liked=1
+               //listType => playlist=2/liked=1
                 //movietype => series=2/movie=1
 export const  checkSavedOrLiked=async(token,listType,movieId,movieType)=>{
     try {
@@ -174,8 +156,7 @@ export const  checkSavedOrLiked=async(token,listType,movieId,movieType)=>{
     }
 }
 
-    //----تغییر روش گرفتن لیست لایک و سیو شده ها 
-                 //listType => playlist=2/liked=1
+    //----   گرفتن لیست لایک و سیو شده ها 
 
     export const  getList=async(token,listType)=>{
         try{
@@ -190,7 +171,6 @@ export const  checkSavedOrLiked=async(token,listType,movieId,movieType)=>{
             throw error;
         }
         }
-    //----تغییر روش گرفتن لیست لایک و سیو شده ها 
 ///****************************************************** */
 
 
@@ -213,47 +193,6 @@ try {
 
 
 
-    //این درخواست برای حذف فیلم از لیست لایک شده ها است 
-    export const removeMovieFromLikedList=async(token,movieId,type)=>{
-        try {
-            const response=await axios.post(`${API_Base_URL_AMIR}playlist/remove-movie`,{
-                playListId:1,
-                movieId:movieId,
-                movieType:type
-    
-            },
-        {headers:{
-            Authorization:`Bearer ${token}`,
-            "Content-Type": "application/json"
-        
-        }
-        })
-        return response.status===200
-        } catch (error) {
-            console.error('Failed to remove liked movie:', error);
-            throw error;
-        }
-        
-        }
-        //این درخواست برای حذف فیلم ها از پلی لیست است
-export const removeMovieFromPlaylist = async (token,movieId,type) => {
-    try {
-        const response = await fetch(`${API_Base_URL_AMIR}playlist/remove-movie`, {
-            method: 'POST',
-            headers: {
-                'authorization': `Bearer ${token}`,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                playListId: 2,
-                movieId: movieId,
-                movieType:type
-            })
-        })
-       return response.status===200
-    } catch (error) {
-        console.error('Failed to remove movie:', error);
-        throw error;
-    }
-}
+
+
 
