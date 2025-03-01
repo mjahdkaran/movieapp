@@ -8,11 +8,12 @@ import { useAuth } from '../../Context/AuthContext';
 import axios from 'axios';
 import CommentSection from '../../Components/CommentSection/CommentSection';
 import AddComment from '../../Components/AddComment/AddComment';
+import Comments from '../../Components/Comments/Comments';
 
 export default function Movie() {
     const [isSaved, setIsSaved] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
-    const [showTab, setShowTab] = useState({ info: false, download: false, comments: true });
+    const [showTab, setShowTab] = useState({ info: true, download: false, comments: false });
     const [showReplies, setShowReplies] = useState({}); // وضعیت نمایش کامنت‌های فرزند
     const [thisMovieGenre, setThisMovieGenre] = useState([]);
     const [details, setDetails] = useState(null);
@@ -27,11 +28,9 @@ export default function Movie() {
     const movieId = location.state;
 
     useEffect(() => {
-        // console.log('user image',userImage)
-        fetchComments()
+      
 
         const fetchData = async () => {
-            console.log(parentComment)
             try {
                 if (!movieId) return;
                 const movieDetails = await fetchMovieById(movieId);
@@ -46,7 +45,7 @@ export default function Movie() {
 
         fetchData();
     }, [token, movieId, childComments, comment]);
-
+//-----
     useEffect(() => {
         const fetchData = async () => {
             if (!details?.id) return;
@@ -93,6 +92,15 @@ export default function Movie() {
         }
     }
 
+//----
+const handleTabChange = (tab) => {
+    setShowTab({ info: false, download: false, comments: false, [tab]: true });
+
+    if (tab === "comments" && allCommentsArray.length === 0) {
+        fetchComments(); // فقط اگر قبلاً لود نشده باشد
+
+    }
+};
 
 
     const saveMovie = async () => {
@@ -210,53 +218,54 @@ export default function Movie() {
             <div className='border border-yellow-300 w-full md:px-36 text-gray-400 '>
 
                 <ul className='flex justify-around list-none text-md md:text-lg font-bold '>
-                    <li className={`flex cursor-pointer p-2 ${showTab.info&& 'text-pink-600 bg-gray-900'}`} onClick={()=>setShowTab({ info: true, download: false, comments: false })}><InFormation /> InFormation</li>
-                    <li className={`flex cursor-pointer p-2 ${showTab.download&& 'text-pink-600 bg-gray-900'}`} onClick={()=>setShowTab({ info: false, download: true, comments: false })}><Download />DownLoads</li>
-                    <li className={`flex cursor-pointer p-2 ${showTab.comments&& 'text-pink-600 bg-gray-900'}`} onClick={()=>setShowTab({ info: false, download: false, comments: true })}><Comment /> Comments</li>
+                    <li className={`flex cursor-pointer p-2 ${showTab.info&& 'text-pink-600 bg-gray-900'}`} onClick={()=>handleTabChange("info")}><InFormation /> InFormation</li>
+                    <li className={`flex cursor-pointer p-2 ${showTab.download&& 'text-pink-600 bg-gray-900'}`} onClick={()=>handleTabChange("download")}><Download />DownLoads</li>
+                    <li className={`flex cursor-pointer p-2 ${showTab.comments&& 'text-pink-600 bg-gray-900'}`} onClick={()=>handleTabChange("comments")}><Comment /> Comments</li>
 
                 </ul>
                 {/* --------------content------------ */}
                 <div className='bg-gray-900'>
                     {showTab.info && <div>this is InFormation</div>}
                     {showTab.download && <div>this is download</div>}
-                    {showTab.comments && <div>comment</div>}
+                    {showTab.comments && <div>
+                        <div className='  w-full  md:px-36  text-white  pb-24 '>
+                                    
+                    
+                        <div className='    rounded-sm p-2 w'>
+                            {/* ------Add comments------- */}
+                    
+                            <AddComment
+                                parentComment={parentComment}
+                                setParentComment={setParentComment}
+                                movieId={movieId}
+                                movieType={1}
+                                setAllCommentsArray={setAllCommentsArray}
+                                fetchComments={fetchComments}
+                                fetchChildComments={fetchChildComments}
+                            />
+                            {/* ------Add comments------- */}
+                    
+                            {/* ------users comments------ */}
+                            <div className=''>
+                                <CommentSection
+                                    allCommentsArray={allCommentsArray}
+                                    fetchComments={fetchComments}
+                                    fetchChildComments={fetchChildComments}
+                                    setParentComment={setParentComment}
+                                    showReplies={showReplies}
+                                    childComments={childComments}
+                                />
+                            </div>
+                            {/* ------users comments------ */}
+                    
+                        </div>
+                    </div>
+                        </div>}
 
                 </div>{/* --------------content------------ */}
 
             </div>
-            {/*------------------- comment section----------------------  */}
-            <div className='  w-full  md:px-36  text-white  pb-24 '>
-                <p className=' flex  w-full px-5 py-5 text-md md:text-xl font-bold text-pink-600'> <span className='px-3'><Comment /></span>    Comments</p>
-
-                <div className='    rounded-sm p-2 w'>
-                    {/* ------Add comments------- */}
-
-                    <AddComment
-                        parentComment={parentComment}
-                        setParentComment={setParentComment}
-                        movieId={movieId}
-                        movieType={1}
-                        setAllCommentsArray={setAllCommentsArray}
-                        fetchComments={fetchComments}
-                        fetchChildComments={fetchChildComments}
-                    />
-                    {/* ------Add comments------- */}
-
-                    {/* ------users comments------ */}
-                    <div className=''>
-                        <CommentSection
-                            allCommentsArray={allCommentsArray}
-                            fetchComments={fetchComments}
-                            fetchChildComments={fetchChildComments}
-                            setParentComment={setParentComment}
-                            showReplies={showReplies}
-                            childComments={childComments}
-                        />
-                    </div>
-                    {/* ------users comments------ */}
-
-                </div>
-            </div>
+           
         </PageLayout>
     );
 }
