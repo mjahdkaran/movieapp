@@ -8,7 +8,6 @@ import { useAuth } from '../../Context/AuthContext';
 import axios from 'axios';
 import CommentSection from '../../Components/CommentSection/CommentSection';
 import AddComment from '../../Components/AddComment/AddComment';
-import Comments from '../../Components/Comments/Comments';
 
 export default function Movie() {
     const [isSaved, setIsSaved] = useState(false);
@@ -203,7 +202,8 @@ const handleTabChange = (tab) => {
                                 <span className='hidden md:inline-block'>Like</span>
 
                             </button>
-                            <button className="flex items-center bg-white bg-opacity-30 text-white rounded-3xl text-sm md:w-28 h-8 p-2 m-1">
+                            <button className="flex items-center bg-white bg-opacity-30 text-white rounded-3xl text-sm md:w-28 h-8 p-2 m-1"
+                            onClick={()=>handleTabChange('download')}>
                                 <Download />
                                 <span className='hidden md:inline-block'>Download</span>
 
@@ -215,19 +215,19 @@ const handleTabChange = (tab) => {
                 </div>
             </div>
             {/* -------------------bottom section------------------------ */}
-            <div className='border border-yellow-300 w-full md:px-36 text-gray-400 '>
+            <div className='w-full md:px-32 text-gray-400 '>
 
-                <ul className='flex justify-around list-none text-md md:text-lg font-bold '>
-                    <li className={`flex cursor-pointer p-2 ${showTab.info&& 'text-pink-600 bg-gray-900'}`} onClick={()=>handleTabChange("info")}><InFormation /> InFormation</li>
-                    <li className={`flex cursor-pointer p-2 ${showTab.download&& 'text-pink-600 bg-gray-900'}`} onClick={()=>handleTabChange("download")}><Download />DownLoads</li>
-                    <li className={`flex cursor-pointer p-2 ${showTab.comments&& 'text-pink-600 bg-gray-900'}`} onClick={()=>handleTabChange("comments")}><Comment /> Comments</li>
+                <ul className='flex justify-around list-none text-xs md:text-lg font-bold  '>
+                    <li className={`flex cursor-pointer items-center pt-3 px-1 rounded-md md:p-2 ${showTab.info&& 'text-pink-600 bg-gray-900'}`} onClick={()=>handleTabChange("info")}><InFormation /> InFormation</li>
+                    <li className={`flex cursor-pointer items-center pt-3 px-1 rounded-md md:p-2 ${showTab.download&& 'text-pink-600 bg-gray-900'}`} onClick={()=>handleTabChange("download")}><Download />DownLoads</li>
+                    <li className={`flex cursor-pointer items-center pt-3 px-1 rounded-md md:p-2 ${showTab.comments&& 'text-pink-600 bg-gray-900'}`} onClick={()=>handleTabChange("comments")}><Comment /> Comments</li>
 
                 </ul>
                 {/* --------------content------------ */}
                 <div className='bg-gray-900'>
                     {showTab.info && <div>this is InFormation</div>}
                     {showTab.download && <div>this is download</div>}
-                    {showTab.comments && <div>
+                    {showTab.comments && 
                         <div className='  w-full  md:px-36  text-white  pb-24 '>
                                     
                     
@@ -260,7 +260,7 @@ const handleTabChange = (tab) => {
                     
                         </div>
                     </div>
-                        </div>}
+                     }
 
                 </div>{/* --------------content------------ */}
 
