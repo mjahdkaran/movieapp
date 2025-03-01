@@ -67,9 +67,10 @@ export default function CommentSection({ allCommentsArray,fetchComments,fetchChi
 
 
                                 </div>
-                                <p>{reply.description}</p>
-                                {/* <button className='text-pink-600 text-xs font-bold'
-                                                   onClick={() => setParentComment(reply)}>  Reply</button> */}
+                                <div> <div className='text-blue-600'>@{reply.parentUserName}</div>
+                                {reply.description}</div>
+                                <button className='text-pink-600 text-xs font-bold'
+                                                   onClick={() => setParentComment(reply)}>  Reply</button>
                             </div>
 
 
