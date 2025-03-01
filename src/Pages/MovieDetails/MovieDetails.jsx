@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import PageLayout from '../../Layout/PageLayout';
 import style from './MovieDetails.module.css';
-import { Back, Comment, Download, Heart, Save,  } from '../../utils/icon';
+import { Back, Comment, Download, Heart, InFormation, Save, } from '../../utils/icon';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { fetchMovieById    , saveMovieTolist, removeMovieFromList, checkSavedOrLiked, getComments, getChildCommentsByParentId } from '../../utils/api';
+import { fetchMovieById, saveMovieTolist, removeMovieFromList, checkSavedOrLiked, getComments, getChildCommentsByParentId } from '../../utils/api';
 import { useAuth } from '../../Context/AuthContext';
 import axios from 'axios';
 import CommentSection from '../../Components/CommentSection/CommentSection';
@@ -12,6 +12,7 @@ import AddComment from '../../Components/AddComment/AddComment';
 export default function Movie() {
     const [isSaved, setIsSaved] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
+    const [showTab, setShowTab] = useState({ info: false, download: false, comments: true });
     const [showReplies, setShowReplies] = useState({}); // وضعیت نمایش کامنت‌های فرزند
     const [thisMovieGenre, setThisMovieGenre] = useState([]);
     const [details, setDetails] = useState(null);
@@ -50,9 +51,9 @@ export default function Movie() {
         const fetchData = async () => {
             if (!details?.id) return;
             try {
-                const isMovieSaved = await checkSavedOrLiked(token, 2,details.id, 1);
+                const isMovieSaved = await checkSavedOrLiked(token, 2, details.id, 1);
                 setIsSaved(isMovieSaved);
-                const isMovieLiked = await checkSavedOrLiked(token, 1,details.id, 1);
+                const isMovieLiked = await checkSavedOrLiked(token, 1, details.id, 1);
                 setIsLiked(isMovieLiked);
             } catch (error) {
                 console.error('Error checking saved/liked status:', error);
@@ -72,10 +73,10 @@ export default function Movie() {
     }
     //-------------
     const fetchChildComments = async (parentId) => {
-        console.log('parentId',parentId)
+        console.log('parentId', parentId)
         try {
             const response = await getChildCommentsByParentId(parentId)
-            
+
 
             setChildComments(prev => ({
                 ...prev,
@@ -96,7 +97,7 @@ export default function Movie() {
 
     const saveMovie = async () => {
         try {
-            const success = await saveMovieTolist(token, 2,details.id, 1);
+            const success = await saveMovieTolist(token, 2, details.id, 1);
             if (success) setIsSaved(true);
         } catch (error) {
             console.error('Failed to save movie:', error);
@@ -105,7 +106,7 @@ export default function Movie() {
 
     const removeMovie = async () => {
         try {
-            const success = await removeMovieFromList(token, 2,details.id, 1);
+            const success = await removeMovieFromList(token, 2, details.id, 1);
             if (success) setIsSaved(false);
         } catch (error) {
             console.error('Failed to remove movie:', error);
@@ -114,7 +115,7 @@ export default function Movie() {
 
     const likeMovie = async () => {
         try {
-            const success = await saveMovieTolist(token, 1,details.id, 1);
+            const success = await saveMovieTolist(token, 1, details.id, 1);
             if (success) setIsLiked(true);
         } catch (error) {
             console.error('Failed to like movie:', error);
@@ -123,7 +124,7 @@ export default function Movie() {
 
     const unLikeMovie = async () => {
         try {
-            const success = await removeMovieFromList(token, 1,details.id, 1);
+            const success = await removeMovieFromList(token, 1, details.id, 1);
             if (success) setIsLiked(false);
         } catch (error) {
             console.error('Failed to remove liked movie:', error);
@@ -204,6 +205,24 @@ export default function Movie() {
                     </div>
 
                 </div>
+            </div>
+            {/* -------------------bottom section------------------------ */}
+            <div className='border border-yellow-300 w-full md:px-36 text-gray-400 '>
+
+                <ul className='flex justify-around list-none text-md md:text-lg font-bold '>
+                    <li className={`flex cursor-pointer p-2 ${showTab.info&& 'text-pink-600 bg-gray-900'}`} onClick={()=>setShowTab({ info: true, download: false, comments: false })}><InFormation /> InFormation</li>
+                    <li className={`flex cursor-pointer p-2 ${showTab.download&& 'text-pink-600 bg-gray-900'}`} onClick={()=>setShowTab({ info: false, download: true, comments: false })}><Download />DownLoads</li>
+                    <li className={`flex cursor-pointer p-2 ${showTab.comments&& 'text-pink-600 bg-gray-900'}`} onClick={()=>setShowTab({ info: false, download: false, comments: true })}><Comment /> Comments</li>
+
+                </ul>
+                {/* --------------content------------ */}
+                <div className='bg-gray-900'>
+                    {showTab.info && <div>this is InFormation</div>}
+                    {showTab.download && <div>this is download</div>}
+                    {showTab.comments && <div>comment</div>}
+
+                </div>{/* --------------content------------ */}
+
             </div>
             {/*------------------- comment section----------------------  */}
             <div className='  w-full  md:px-36  text-white  pb-24 '>
