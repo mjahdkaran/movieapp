@@ -203,6 +203,24 @@ try {
     throw error
 }
 }
+//جست و جوی فیلم و سریال
+// endpoin=>tv/movie
+export const searchingFunction = async (debounceQuery, endpoint) => {
+    try {
+        const response = await ApiClient.get(`search/${endpoint}`, {
+            params: {
+                query: debounceQuery,
+                language: 'en-US',  // اضافه کردن زبان
+            },
+        });
+
+        return response.data.results || [];
+    } catch (error) {
+        console.error('Error in searchingFunction:', error);
+        return [];
+    }
+};
+
 //اضافه کردن کامنت 
 
 
