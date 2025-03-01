@@ -31,13 +31,13 @@ export default function FilmCategories({ title, endpoint, fetchMoviesFunction,ty
             <div className="flex justify-between">
                 <p
                     className="font-bold text-2xl text-pink-400 hover:text-pink-500 cursor-pointer"
-                    onClick={() => navigate('/' + endpoint)}
+                    onClick={() => navigate('/' + endpoint, { state: {title,type}})}
                 >
                     {title}
                 </p>
                 <div
                     className="flex items-center font-medium text-lg text-pink-500 hover:text-pink-600 cursor-pointer"
-                    onClick={() => navigate('/' + endpoint, { state: title })}
+                    onClick={() => navigate('/' + endpoint, { state: {title,type} })}
                 >
                     See All
                     <span className="m-2">

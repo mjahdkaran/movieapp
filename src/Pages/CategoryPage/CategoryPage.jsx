@@ -2,25 +2,40 @@ import React, { useEffect, useState } from 'react'
 import PageLayout from '../../Layout/PageLayout'
 import FilteringHeader from '../../Components/FilteringHeader/FilteringHeader'
 import PosterCard from '../../Components/PosterCard/PosterCard'
-import { fetchMovieByCategory } from '../../utils/api'
-import { useLocation, useParams,useNavigate } from 'react-router-dom'
-import { Back, LeftArrowRound , RightArrowRound } from '../../utils/icon'
+import { fetchMovieByCategory, fetchSeriesByCategory } from '../../utils/api'
+import { useLocation, useParams, useNavigate } from 'react-router-dom'
+import { Back, LeftArrowRound, RightArrowRound } from '../../utils/icon'
 
 
 export default function CategoryPage() {
     const { category } = useParams()
     const [isLoading, setIsLoading] = useState(false)
     const location = useLocation()
-    const title = location.state
+    const { title, type } = location.state
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(32);
-const navigate=useNavigate()
+    const navigate = useNavigate()
     const [allMovies, setAllMovies] = useState([])
+
+    useEffect(() => {
+        console.log('state', location.state)
+    }, [])
+
+
+
+
     useEffect(() => {
         const fetcheMovies = async () => {
             try {
                 setIsLoading(true)
-                const data = await fetchMovieByCategory(category, currentPage)
+
+                let data;
+
+                if (type && type === 'movie') {
+                    data = await fetchMovieByCategory(category, currentPage);
+                } else {
+                    data = await fetchSeriesByCategory(category, currentPage);
+                }
                 setAllMovies(data)
 
             } catch (error) {
@@ -39,18 +54,18 @@ const navigate=useNavigate()
         <PageLayout>
             {/* <FilteringHeader /> */}
             <div className='flex pl-5  flex-col h-screen bg-blyeack mt-20'>
-                <div className='border-b-2   border-pink-700'>
+                <div className=''>
                     <button className='text-pink-500  cursor-pointer hover:bg-pink-500 hover:rounded-full hover:text-white'
-                    onClick={()=>navigate(-1)} >
-                    
-                        <Back/></button>
-                    <h1 className='text-2xl text-white font-bold px-4 py-1'>{title} movies</h1>
+                        onClick={() => navigate(-1)} >
+
+                        <Back /></button>
+                    <h1 className='text-2xl text-pink-600 font-bold font-mono px-4 py-1'>{title} movies</h1>
 
                 </div>
 
                 {!isLoading ? (
                     <div className='flex-1 flex flex-wrap justify-center md:justify-start space-x-4 py-5 px-3  '>
-                        {allMovies.map((movie, index) => <PosterCard key={`${movie.id}-${index}`} movieobj={movie} width='w-full'/>)}
+                        {allMovies.map((movie, index) => <PosterCard key={`${movie.id}-${index}`} movieobj={movie} width='w-full' />)}
 
                     </div>
                 ) :
