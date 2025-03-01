@@ -221,11 +221,36 @@ export const searchingFunction = async (debounceQuery, endpoint) => {
     }
 };
 
-//اضافه کردن کامنت 
+//گرفتن کامنت ها با id , سریال فیلم
+export const getComments=async(movieId,movieType)=>{
+    try {
+        const response = await axios.get(`http://65.109.177.24:2024/api/comment/movie/${movieId}/${movieType}`)
+        return response.data
+    } catch (error) {
+        console.error('Error getting comments', error)
+    }}
+//گرفتن commnentChiled با id
 
 
 
 
+export const getChildCommentsByParentId = async (parentId, take = 50, skip = 0) => {
+    if (!parentId) {
+        console.error('Error: parentId is required');
+        return null; // مقدار نامعتبر برمی‌گردانیم تا کرش نکند
+    }
+
+    try {
+        const response = await axios.get(`http://65.109.177.24:2024/api/comment/parent/${parentId}`, {
+            params: { take, skip }
+        });
+        console.log('child',response.data.getCommentChildrenResults)
+        return response.data.getCommentChildrenResults;
+    } catch (error) {
+        console.error('Error getting comments:', error);
+        return null; // در صورت خطا مقدار `null` برمی‌گردانیم
+    }
+};
 
 
-
+    
