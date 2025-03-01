@@ -234,7 +234,7 @@ export const getComments=async(movieId,movieType)=>{
 
 
 
-export const getChildCommentsByParentId = async (parentId, take = 4, skip = 0) => {
+export const getChildCommentsByParentId = async (parentId, take = 50, skip = 0) => {
     if (!parentId) {
         console.error('Error: parentId is required');
         return null; // مقدار نامعتبر برمی‌گردانیم تا کرش نکند
