@@ -3,9 +3,9 @@ import { useAuth } from '../../Context/AuthContext';
 import { Send } from '../../utils/icon';
 import axios from 'axios';
 
-export default function MyComment({parentComment,setParentComment,movieId,fetchComments,fetchChildComments}) {
-       const { token, user, userImage } = useAuth();
-    const [comment,setComment]=useState('')
+export default function MyComment({ parentComment, setParentComment, movieId, movieType, fetchComments, fetchChildComments }) {
+    const { token, user, userImage } = useAuth();
+    const [comment, setComment] = useState('')
 
     //-----------    
     const addComment = async () => {
@@ -13,6 +13,7 @@ export default function MyComment({parentComment,setParentComment,movieId,fetchC
         try {
             const response = await axios.post('http://65.109.177.24:2024/api/comment', {
                 "movieId": movieId,
+                "movieType": movieType,
                 "Description": comment,
                 "parentId": parentComment?.id || null
             }, {
@@ -37,7 +38,7 @@ export default function MyComment({parentComment,setParentComment,movieId,fetchC
         }
     }
 
-//----------------------
+    //----------------------
 
 
     return (

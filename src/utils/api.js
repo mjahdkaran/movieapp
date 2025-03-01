@@ -221,8 +221,14 @@ export const searchingFunction = async (debounceQuery, endpoint) => {
     }
 };
 
-//اضافه کردن کامنت 
-
+//گرفتن کامنت ها با id فیلم
+export const getComments=async(movieId,movieType)=>{
+    try {
+        const response = await axios.get(`http://65.109.177.24:2024/api/comment/movie/${movieId}/${movieType}`)
+        return response.data
+    } catch (error) {
+        console.error('Error getting comments', error)
+    }}
 
 
 

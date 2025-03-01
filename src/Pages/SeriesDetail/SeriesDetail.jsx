@@ -3,7 +3,7 @@ import PageLayout from '../../Layout/PageLayout';
 import style from './SeriesDetail.module.css';
 import { Back, Comment, Download, Heart, Save, Send, Trash } from '../../utils/icon';
 import { useLocation, useNavigate } from 'react-router-dom';
-import {  fetchSeriesById, saveMovieTolist, removeMovieFromList, checkSavedOrLiked } from '../../utils/api';
+import {  fetchSeriesById, saveMovieTolist, removeMovieFromList, checkSavedOrLiked, getComments } from '../../utils/api';
 import { useAuth } from '../../Context/AuthContext';
 import axios from 'axios';
 import CommentSection from '../../Components/CommentSection/CommentSection';
@@ -62,14 +62,14 @@ export default function SeriesDetails() {
         fetchData();
     }, [token, details?.id]);
     //---------------
-    const fetchComments = async () => {
-        try {
-            const response = await axios.get(`http://65.109.177.24:2024/api/comment/movie/${movieId}`)
-            setAllCommentsArray(response.data)
-        } catch (error) {
-            console.error('Error getting comments', error)
+       const fetchComments = async () => {
+            try {
+                const response = await getComments(movieId, 2)
+                setAllCommentsArray(response)
+            } catch (error) {
+                console.error('Error getting series comments', error)
+            }
         }
-    }
     //-------------
     const fetchChildComments = async (parentId) => {
         try {
@@ -221,6 +221,7 @@ export default function SeriesDetails() {
                         parentComment={parentComment}
                         setParentComment={setParentComment}
                         movieId={movieId}
+                        movieType={2}
                         setAllCommentsArray={setAllCommentsArray}
                         fetchComments={fetchComments}
                         fetchChildComments={fetchChildComments}
