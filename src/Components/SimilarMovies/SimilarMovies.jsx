@@ -29,7 +29,7 @@ export default function SimilarMovies({ movieType, movieId }) {
     };
 
     return (
-        <div className="relative">
+        <div className="relative mb-6">
             <h1 className='font-bold text-3xl text-pink-400 py-5 mx-2 '>Similar</h1>
             <div className='absolute left-2 top-1/2 transform -translate-y-1/2 z-50 '>
                 <button onClick={scrollLeft} className="bg-black bg-opacity-50 rounded-full text-pink-700  p-1 "><Left  /></button>
