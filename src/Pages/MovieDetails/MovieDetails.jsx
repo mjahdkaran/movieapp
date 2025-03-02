@@ -12,8 +12,8 @@ import AddComment from '../../Components/AddComment/AddComment';
 export default function Movie() {
     const [isSaved, setIsSaved] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
-    const [showTab, setShowTab] = useState({ info: true, download: false, comments: false });
     const [showReplies, setShowReplies] = useState({}); // وضعیت نمایش کامنت‌های فرزند
+    const [showTab, setShowTab] = useState({ info: true, download: false, comments: false });
     const [thisMovieGenre, setThisMovieGenre] = useState([]);
     const [details, setDetails] = useState(null);
     const [comment] = useState('');
