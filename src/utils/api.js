@@ -253,4 +253,17 @@ export const getChildCommentsByParentId = async (parentId, take = 50, skip = 0) 
 };
 
 
-    
+    //گرفتن لینک های دانلود
+    export const  getDownloadLinks=async(token,movieName)=>{
+        try {
+            const response=await axios.get(`http://65.109.177.24:2024/api/movie/download-links/${movieName}`,{
+                headers:{
+                    authorization:`Bearer ${token}` 
+                }
+            })
+        
+            return response.data
+        } catch (error) {
+            console.error('error get download links',error)
+        }
+    }
