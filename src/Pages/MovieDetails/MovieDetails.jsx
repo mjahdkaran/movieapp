@@ -15,6 +15,7 @@ export default function Movie() {
     const [isLiked, setIsLiked] = useState(false);
     const [showReplies, setShowReplies] = useState({}); // وضعیت نمایش کامنت‌های فرزند
     const [showTab, setShowTab] = useState({ info: true, download: false, comments: false });
+    const [showMore, setShowMore] = useState(false)
     const [thisMovieGenre, setThisMovieGenre] = useState([]);
     const [details, setDetails] = useState(null);
     const [comment] = useState('');
@@ -186,8 +187,14 @@ export default function Movie() {
                                 <p>{details.adult ? 'Suitable for over 18 years old.' : 'Suitable for all ages'}</p>
                                 <p>
                                     <span className="text-lg font-bold text-pink-600 mr-2">Story Overview:</span>
-                                    {details.overview}
+
+                                    {showMore ? details.overview : details.overview.slice(0, 200)+'...'}
+
                                 </p>
+                                <div className='text-gray-400'>
+                                    <button onClick={() => setShowMore(!showMore)}>{showMore ? 'less' : 'more...'}</button>
+
+                                </div>
                                 <div className="flex">
                                     {thisMovieGenre.map(genre => (
                                         <span key={genre.name} className="bg-white rounded-full text-sm bg-opacity-30 px-2 m-1">
