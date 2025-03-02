@@ -39,7 +39,7 @@ export default function SimilarMovies({ movieType, movieId }) {
                     <PosterCard
                         key={movie.id}
                         movieobj={movie} // ارسال آبجکت فیلم به PosterCard
-                        type='movie'
+                        type={movieType}
                         style={{ 
                             width: 'w-32',
                             height: 'h-40',

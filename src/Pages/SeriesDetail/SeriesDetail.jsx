@@ -7,6 +7,7 @@ import { fetchSeriesById, saveMovieTolist, removeMovieFromList, checkSavedOrLike
 import { useAuth } from '../../Context/AuthContext';
 import CommentSection from '../../Components/CommentSection/CommentSection';
 import AddComment from '../../Components/AddComment/AddComment';
+import SimilarMovies from '../../Components/SimilarMovies/SimilarMovies';
 
 export default function SeriesDetails() {
     const [isSaved, setIsSaved] = useState(false);
@@ -174,7 +175,7 @@ export default function SeriesDetails() {
                                     {details.number_of_episodes}</p>
                                 <p>
                                     <span className="text-lg font-bold text-pink-600 mr-2">Story Overview:</span>
-                                    {showOverView ? details.overview : details.overview.slice(0, 200)+'...'}
+                                    {showOverView ? details.overview : details.overview.slice(0, 200) + '...'}
                                     <p>  <button className='text-gray-400' onClick={() => setShowOverView(!showOverView)}>{showOverView ? 'less' : 'more...'}</button></p>
                                 </p>
 
@@ -209,7 +210,7 @@ export default function SeriesDetails() {
                             <button className="flex items-center bg-white bg-opacity-30 text-white rounded-3xl text-sm md:w-28 h-8 p-2 m-1">
                                 <Download />
                                 <span className='hidden md:inline-block'
-                                onClick={()=>handleTabChange('download')}>Download</span>
+                                    onClick={() => handleTabChange('download')}>Download</span>
 
                             </button>
                         </div>
@@ -267,7 +268,11 @@ export default function SeriesDetails() {
                     }
 
                 </div>{/* --------------content------------ */}
-
+                {/* similar movies section */}
+                <div><SimilarMovies
+                    movieType='tv'
+                    movieId={details.id}
+                /></div>{/* similar movies section */}
             </div>
         </PageLayout>
     );

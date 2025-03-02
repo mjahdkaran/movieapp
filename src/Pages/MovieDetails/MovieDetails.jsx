@@ -288,10 +288,11 @@ export default function Movie() {
 
                 </div>{/* --------------content------------ */}
                 {/* info download comment section */}
+                {/* similar movies section */}
                 <div><SimilarMovies
                 movieType='movie'
                 movieId={details.id}
-                /></div>
+                /></div>{/* similar movies section */}
             </div>
 
         </PageLayout>
