@@ -4,6 +4,7 @@ import { Search } from '../../utils/icon';
 import { useNavigate } from 'react-router-dom';
 import { fetchGenreOfMovie, searchingFunction } from '../../utils/api';
 import { useDebounce } from '../../utils/Hooks/useDebounce.jsx';
+import { Result } from 'postcss';
 
 export default function SearchPage() {
     const searchInputRef = useRef(null);
@@ -38,33 +39,34 @@ export default function SearchPage() {
         const fetchMovies = async () => {
             setLoading(true);
             try {
-                
                 let response = [];
-
-                switch (endpoint) {
-                    case 'all':
-                        const moviesResponse = await searchingFunction(debounceQuery, 'movie');
-                        const seriesResponse = await searchingFunction(debounceQuery, 'tv');
-                        response = [...moviesResponse, ...seriesResponse];
-                        break;
-                    case 'movie':
-                        response = await searchingFunction(debounceQuery, 'movie');
-                        break;
-                    case 'series':
-                        response = await searchingFunction(debounceQuery, 'tv');
-                        break;
-                    default:
-                        console.warn('Invalid endpoint:', endpoint);
-                        return;
+        
+                if (endpoint === 'all') {
+                    // اجرای همزمان درخواست‌های movie و tv با Promise.all برای بهبود عملکرد
+                    const [moviesResponse, seriesResponse] = await Promise.all([
+                        searchingFunction(debounceQuery, 'movie'),
+                        searchingFunction(debounceQuery, 'tv')
+                    ]);
+        
+                    response = [
+                        ...moviesResponse.map(obj => ({ ...obj, movieType: 1 })),
+                        ...seriesResponse.map(obj => ({ ...obj, movieType: 2 }))
+                    ];
+                } else if (endpoint === 'movie' || endpoint === 'tv') {
+                    const type = endpoint === 'movie' ? 1 : 2;
+                    const result = await searchingFunction(debounceQuery, endpoint);
+                    response = result.map(obj => ({ ...obj, movieType: type }));
+                } else {
+                    console.warn('Invalid endpoint:', endpoint);
+                    return;
                 }
-
+        
+                // افزودن نام ژانرها به فیلم‌ها
                 const moviesWithGenres = response.map(movie => ({
                     ...movie,
-                    genres: movie.genre_ids?.map(id =>
-                        defaultGenres.find(genre => genre.id === id)?.name
-                    ).filter(name => name !== undefined) || []
+                    genres: (movie.genre_ids || []).map(id => defaultGenres.find(genre => genre.id === id)?.name).filter(Boolean)
                 }));
-
+        
                 setMovies(moviesWithGenres);
             } catch (error) {
                 console.error('Error fetching movies:', error);
@@ -72,6 +74,7 @@ export default function SearchPage() {
                 setLoading(false);
             }
         };
+        
 
         fetchMovies();
     }, [debounceQuery, defaultGenres, endpoint]); // افزودن `endpoint` به `dependencies`
@@ -105,7 +108,7 @@ export default function SearchPage() {
                         value={endpoint}
                     >
                         <option value="all" className='bg-black outline-none border-none rounded-none'>All</option>
-                        <option value="series" className='bg-black outline-none border-none rounded-none'>Series</option>
+                        <option value="tv" className='bg-black outline-none border-none rounded-none'>Series</option>
                         <option value="movie" className='bg-black outline-none border-none rounded-none'>Movie</option>
                     </select>
                 </div>
@@ -115,7 +118,9 @@ export default function SearchPage() {
                     ) : (
                         movies.map((movie) => (
                             <li key={movie.id} className='flex border-b flex-col md:flex-row border-gray-500 p-4'
-                                onClick={() => navigate('/m/' + movie.id, { state: movie.id })}
+                                onClick={() => {
+                                  movie.movieType===1?  navigate('/m/' + movie.id, { state: movie.id }):
+                                  navigate('/s/' + movie.id, { state: movie.id })}}
                             >
                                 <img className='w-full md:w-28 h-40 min-w-28 object-cover rounded-md'
                                     src={`http://65.109.177.24:2024/api/file/image?size=w500&imgPath=${movie.backdrop_path}`} alt="Poster" />

@@ -1,24 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import PageLayout from '../../Layout/PageLayout';
 import style from './MovieDetails.module.css';
-import { Back, Comment, Download, Heart, Save,  } from '../../utils/icon';
+import { Back, Comment, Download, Heart, InFormation, Save, } from '../../utils/icon';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { fetchMovieById    , saveMovieTolist, removeMovieFromList, checkSavedOrLiked, getComments, getChildCommentsByParentId } from '../../utils/api';
+import { fetchMovieById, saveMovieTolist, removeMovieFromList, checkSavedOrLiked, getComments, getChildCommentsByParentId, getDownloadLinks } from '../../utils/api';
 import { useAuth } from '../../Context/AuthContext';
 import axios from 'axios';
 import CommentSection from '../../Components/CommentSection/CommentSection';
 import AddComment from '../../Components/AddComment/AddComment';
+import DownLoadLinks from '../../Components/DownLoadLinks/DownLoadLinks';
 
 export default function Movie() {
     const [isSaved, setIsSaved] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
     const [showReplies, setShowReplies] = useState({}); // وضعیت نمایش کامنت‌های فرزند
+    const [showTab, setShowTab] = useState({ info: true, download: false, comments: false });
     const [thisMovieGenre, setThisMovieGenre] = useState([]);
     const [details, setDetails] = useState(null);
     const [comment] = useState('');
     const [allCommentsArray, setAllCommentsArray] = useState([])
     const [childComments, setChildComments] = useState({}); // کامنت‌های فرزند هر کامنت
-
+    const [downloadLinksArray, setDownloadLinksArray] = useState([])
     const [parentComment, setParentComment] = useState({})
     const { token } = useAuth();
     const navigate = useNavigate();
@@ -26,11 +28,9 @@ export default function Movie() {
     const movieId = location.state;
 
     useEffect(() => {
-        // console.log('user image',userImage)
-        fetchComments()
+
 
         const fetchData = async () => {
-            console.log(parentComment)
             try {
                 if (!movieId) return;
                 const movieDetails = await fetchMovieById(movieId);
@@ -45,14 +45,14 @@ export default function Movie() {
 
         fetchData();
     }, [token, movieId, childComments, comment]);
-
+    //-----
     useEffect(() => {
         const fetchData = async () => {
             if (!details?.id) return;
             try {
-                const isMovieSaved = await checkSavedOrLiked(token, 2,details.id, 1);
+                const isMovieSaved = await checkSavedOrLiked(token, 2, details.id, 1);
                 setIsSaved(isMovieSaved);
-                const isMovieLiked = await checkSavedOrLiked(token, 1,details.id, 1);
+                const isMovieLiked = await checkSavedOrLiked(token, 1, details.id, 1);
                 setIsLiked(isMovieLiked);
             } catch (error) {
                 console.error('Error checking saved/liked status:', error);
@@ -70,12 +70,22 @@ export default function Movie() {
             console.error('Error getting movies comments', error)
         }
     }
+    //---------
+    const fetchDownloadLinks = async () => {
+        try {
+            const response = await getDownloadLinks(token, details.title)
+            console.log('fetched download links', response)
+            setDownloadLinksArray(response)
+        } catch (error) {
+            console.error('Error fetching download links in movieDetails', error)
+        }
+    }
     //-------------
     const fetchChildComments = async (parentId) => {
-        console.log('parentId',parentId)
+        console.log('parentId', parentId)
         try {
             const response = await getChildCommentsByParentId(parentId)
-            
+
 
             setChildComments(prev => ({
                 ...prev,
@@ -92,11 +102,23 @@ export default function Movie() {
         }
     }
 
+    //----
+    const handleTabChange = (tab) => {
+        setShowTab({ info: false, download: false, comments: false, [tab]: true });
+
+        if (tab === "comments" && allCommentsArray.length === 0) {
+            fetchComments(); // فقط اگر قبلاً لود نشده باشد
+
+        } else if (tab === "download") {
+            fetchDownloadLinks()
+        }
+
+    };
 
 
     const saveMovie = async () => {
         try {
-            const success = await saveMovieTolist(token, 2,details.id, 1);
+            const success = await saveMovieTolist(token, 2, details.id, 1);
             if (success) setIsSaved(true);
         } catch (error) {
             console.error('Failed to save movie:', error);
@@ -105,7 +127,7 @@ export default function Movie() {
 
     const removeMovie = async () => {
         try {
-            const success = await removeMovieFromList(token, 2,details.id, 1);
+            const success = await removeMovieFromList(token, 2, details.id, 1);
             if (success) setIsSaved(false);
         } catch (error) {
             console.error('Failed to remove movie:', error);
@@ -114,7 +136,7 @@ export default function Movie() {
 
     const likeMovie = async () => {
         try {
-            const success = await saveMovieTolist(token, 1,details.id, 1);
+            const success = await saveMovieTolist(token, 1, details.id, 1);
             if (success) setIsLiked(true);
         } catch (error) {
             console.error('Failed to like movie:', error);
@@ -123,7 +145,7 @@ export default function Movie() {
 
     const unLikeMovie = async () => {
         try {
-            const success = await removeMovieFromList(token, 1,details.id, 1);
+            const success = await removeMovieFromList(token, 1, details.id, 1);
             if (success) setIsLiked(false);
         } catch (error) {
             console.error('Failed to remove liked movie:', error);
@@ -194,7 +216,8 @@ export default function Movie() {
                                 <span className='hidden md:inline-block'>Like</span>
 
                             </button>
-                            <button className="flex items-center bg-white bg-opacity-30 text-white rounded-3xl text-sm md:w-28 h-8 p-2 m-1">
+                            <button className="flex items-center bg-white bg-opacity-30 text-white rounded-3xl text-sm md:w-28 h-8 p-2 m-1"
+                                onClick={() => handleTabChange('download')}>
                                 <Download />
                                 <span className='hidden md:inline-block'>Download</span>
 
@@ -205,39 +228,59 @@ export default function Movie() {
 
                 </div>
             </div>
-            {/*------------------- comment section----------------------  */}
-            <div className='  w-full  md:px-36  text-white  pb-24 '>
-                <p className=' flex  w-full px-5 py-5 text-md md:text-xl font-bold text-pink-600'> <span className='px-3'><Comment /></span>    Comments</p>
+            {/* -------------------bottom section------------------------ */}
+            <div className='w-full md:px-32 text-gray-400 '>
 
-                <div className='    rounded-sm p-2 w'>
-                    {/* ------Add comments------- */}
+                <ul className='flex justify-around list-none text-xs md:text-lg font-bold  '>
+                    <li className={`flex cursor-pointer items-center pt-3 px-1 rounded-md md:p-2 ${showTab.info && 'text-pink-600 bg-gray-900'}`} onClick={() => handleTabChange("info")}><InFormation /> InFormation</li>
+                    <li className={`flex cursor-pointer items-center pt-3 px-1 rounded-md md:p-2 ${showTab.download && 'text-pink-600 bg-gray-900'}`} onClick={() => handleTabChange("download")}><Download />DownLoads</li>
+                    <li className={`flex cursor-pointer items-center pt-3 px-1 rounded-md md:p-2 ${showTab.comments && 'text-pink-600 bg-gray-900'}`} onClick={() => handleTabChange("comments")}><Comment /> Comments</li>
 
-                    <AddComment
-                        parentComment={parentComment}
-                        setParentComment={setParentComment}
-                        movieId={movieId}
-                        movieType={1}
-                        setAllCommentsArray={setAllCommentsArray}
-                        fetchComments={fetchComments}
-                        fetchChildComments={fetchChildComments}
-                    />
-                    {/* ------Add comments------- */}
+                </ul>
+                {/* --------------content------------ */}
+                <div className='bg-gray-900'>
+                    {showTab.info && <div>this is InFormation</div>}
+                    {showTab.download && <div><DownLoadLinks
+                        downloadLinksArray={downloadLinksArray} /></div>}
+                    {showTab.comments &&
+                        <div className='  w-full  md:px-36  text-white  pb-24 '>
 
-                    {/* ------users comments------ */}
-                    <div className=''>
-                        <CommentSection
-                            allCommentsArray={allCommentsArray}
-                            fetchComments={fetchComments}
-                            fetchChildComments={fetchChildComments}
-                            setParentComment={setParentComment}
-                            showReplies={showReplies}
-                            childComments={childComments}
-                        />
-                    </div>
-                    {/* ------users comments------ */}
 
-                </div>
+                            <div className='    rounded-sm p-2 w'>
+                                {/* ------Add comments------- */}
+
+                                <AddComment
+                                    parentComment={parentComment}
+                                    setParentComment={setParentComment}
+                                    movieId={movieId}
+                                    movieType={1}
+                                    setAllCommentsArray={setAllCommentsArray}
+                                    fetchComments={fetchComments}
+                                    fetchChildComments={fetchChildComments}
+                                />
+                                {/* ------Add comments------- */}
+
+                                {/* ------users comments------ */}
+                                <div className=''>
+                                    <CommentSection
+                                        allCommentsArray={allCommentsArray}
+                                        fetchComments={fetchComments}
+                                        fetchChildComments={fetchChildComments}
+                                        setParentComment={setParentComment}
+                                        showReplies={showReplies}
+                                        childComments={childComments}
+                                    />
+                                </div>
+                                {/* ------users comments------ */}
+
+                            </div>
+                        </div>
+                    }
+
+                </div>{/* --------------content------------ */}
+
             </div>
+
         </PageLayout>
     );
 }
