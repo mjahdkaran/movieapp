@@ -65,7 +65,13 @@ export default function CategoryPage() {
 
                 {!isLoading ? (
                     <div className='flex-1 flex flex-wrap justify-center md:justify-start space-x-4 py-5 px-3  '>
-                        {allMovies.map((movie, index) => <PosterCard key={`${movie.id}-${index}`} movieobj={movie} width='w-full' />)}
+                        {allMovies.map((movie, index) => <PosterCard key={`${movie.id}-${index}`} movieobj={movie}
+                            style={{
+                                width: 'w-full',
+                                mdWidth: 'w-44',
+                                height: 'h-56',
+                                mdHeight: 'h-56',
+                            }} />)}
 
                     </div>
                 ) :

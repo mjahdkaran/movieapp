@@ -9,6 +9,7 @@ import axios from 'axios';
 import CommentSection from '../../Components/CommentSection/CommentSection';
 import AddComment from '../../Components/AddComment/AddComment';
 import DownLoadLinks from '../../Components/DownLoadLinks/DownLoadLinks';
+import SimilarMovies from '../../Components/SimilarMovies/SimilarMovies';
 
 export default function Movie() {
     const [isSaved, setIsSaved] = useState(false);
@@ -188,7 +189,7 @@ export default function Movie() {
                                 <p>
                                     <span className="text-lg font-bold text-pink-600 mr-2">Story Overview:</span>
 
-                                    {showMore ? details.overview : details.overview.slice(0, 200)+'...'}
+                                    {showMore  ? details.overview : details.overview.slice(0, 200) + '...'}
 
                                 </p>
                                 <div className='text-gray-400'>
@@ -236,6 +237,7 @@ export default function Movie() {
                 </div>
             </div>
             {/* -------------------bottom section------------------------ */}
+            {/* info download comment section */}
             <div className='w-full md:px-32 text-gray-400 '>
 
                 <ul className='flex justify-around list-none text-xs md:text-lg font-bold  '>
@@ -285,7 +287,11 @@ export default function Movie() {
                     }
 
                 </div>{/* --------------content------------ */}
-
+                {/* info download comment section */}
+                <div><SimilarMovies
+                movieType='movie'
+                movieId={details.id}
+                /></div>
             </div>
 
         </PageLayout>

@@ -1,12 +1,21 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export default function PosterCard({ movieobj,width='w-44' ,type}) {
+const defaultStyle = {
+    width: 'w-44',
+    mdWidth: 'w-44',
+    height: 'h-56',
+    mdHeight: 'h-56',
+    textSize: 'text-md',
+    mdTextSize: 'text-md',
+    detailTextSize:'text-sm'
+};
+export default function PosterCard({ movieobj, type, style = defaultStyle }) {
 
     const navigate = useNavigate()
 
-    const navigateHandler=()=>{
-        type==='movie'?navigate('/m/' + movieobj.id, { state: movieobj.id }):navigate('/s/' + movieobj.id, { state: movieobj.id })
+    const navigateHandler = () => {
+        type === 'movie' ? navigate('/m/' + movieobj.id, { state: movieobj.id }) : navigate('/s/' + movieobj.id, { state: movieobj.id })
     }
     // ساخت آدرس کامل برای تصویر
     const imageUrl = movieobj.backdrop_path
@@ -15,7 +24,7 @@ export default function PosterCard({ movieobj,width='w-44' ,type}) {
 
     return (
         <div className='flex flex-col mr-4' onClick={navigateHandler}>
-            <div className={`relative h-56 ${width} md:h-56 md:w-44 rounded-md   `}>
+            <div className={`relative ${style.height} ${style.width} md:${style.mdHeight} md:${style.mdWidth} rounded-md   `}>
 
                 {/* تصویر اصلی */}
                 <img
@@ -26,8 +35,8 @@ export default function PosterCard({ movieobj,width='w-44' ,type}) {
 
                 {/* پوشش شفاف و اطلاعاتی که روی عکس می‌آید */}
                 <div className="absolute top-0 left-0 w-full h-full rounded-md p-2  bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity flex flex-col items-start justify-end">
-                    <p className="text-white font-bold text-sm ">IMDB:{movieobj.vote_average} </p>
-                    <p className="text-white font-bold text-sm">ReleaseDate:{movieobj.release_date||movieobj.first_air_date} </p>
+                    <p className={`text-white font-bold ${style.detailTextSize} `}>IMDB:{movieobj.vote_average} </p>
+                    <p className={`text-white font-bold ${style.detailTextSize}`}>ReleaseDate:{movieobj.release_date || movieobj.first_air_date} </p>
                     {/* <p className="text-white font-bold text-lg">info3 </p>
                     <p className="text-white font-bold text-lg">info4 </p> */}
 
@@ -35,7 +44,7 @@ export default function PosterCard({ movieobj,width='w-44' ,type}) {
 
 
             </div>
-            <p className={`text-white font-bold my-2 flex flex-wrap justify-center ${width} md:w-44`} > {movieobj.title||movieobj.name}</p>
+            <p className={`text-white ${style.textSize} md:${style.mdTextSize} font-bold my-2 flex flex-wrap justify-center ${style.width} md:${style.mdWidth}`} > {movieobj.title || movieobj.name}</p>
         </div>
 
     );

@@ -88,6 +88,24 @@ export  const fetchSeriesById=async(movieId)=>{
         console.error('fetchMovieById error')
     }
 }
+//------
+export  const fetchSimilarMovie=async(movieType,movieId,page=1)=>{
+    // movieType=>movie/tv
+    try {
+        const response=await ApiClient.get(`${movieType}/${movieId}/similar`,{
+            params:{
+                language: 'en-US',
+                page,
+            }
+        })
+        console.log('similar',response.data.results )
+        return response.data.results || []
+    } catch (error) {
+        console.log(`error fetching  Similar movies: `, error);
+        return []
+    }
+    
+}
 //-------------------------------
 export const fetchLanguages=async()=>{
     try {
