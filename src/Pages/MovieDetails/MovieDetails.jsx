@@ -8,6 +8,7 @@ import { useAuth } from '../../Context/AuthContext';
 import axios from 'axios';
 import CommentSection from '../../Components/CommentSection/CommentSection';
 import AddComment from '../../Components/AddComment/AddComment';
+import DownLoadLinks from '../../Components/DownLoadLinks/DownLoadLinks';
 
 export default function Movie() {
     const [isSaved, setIsSaved] = useState(false);
@@ -239,7 +240,8 @@ export default function Movie() {
                 {/* --------------content------------ */}
                 <div className='bg-gray-900'>
                     {showTab.info && <div>this is InFormation</div>}
-                    {showTab.download && <div>this is download</div>}
+                    {showTab.download && <div><DownLoadLinks
+                        downloadLinksArray={downloadLinksArray} /></div>}
                     {showTab.comments &&
                         <div className='  w-full  md:px-36  text-white  pb-24 '>
 
