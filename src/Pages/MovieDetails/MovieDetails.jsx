@@ -186,19 +186,19 @@ export default function Movie() {
                                 </p>
                                 <p className='my-2'><span className='font-bold  text-pink-500'>IMDB  : </span>   {details.vote_average.toFixed(1).replace(/\.0$/, '')} <span className='text-gray-500'>/10</span></p>
                                 <p>{details.adult ? 'Suitable for over 18 years old.' : 'Suitable for all ages'}</p>
-                                <p>
+                                <div>
                                     <span className="text-lg font-bold text-pink-600 mr-2">Story Overview:</span>
 
-                                    {showMore  ? details.overview : details.overview.slice(0, 200) + '...'}
-
-                                </p>
-                                <div className='text-gray-400'>
-                                    <button onClick={() => setShowMore(!showMore)}>{showMore ? 'less' : 'more...'}</button>
+                                    {showMore &&details.overview.length>=200 ? details.overview : details.overview.slice(0, 200) }
+                                    <button className='font-bold text-gray-400 mx-1' onClick={() => setShowMore(!showMore)}>{showMore ? 'less' : 'more...'}</button>
 
                                 </div>
+                               
+
+                            
                                 <div className="flex">
                                     {thisMovieGenre.map(genre => (
-                                        <span key={genre.name} className="bg-white rounded-full text-sm bg-opacity-30 px-2 m-1">
+                                        <span key={genre.name} className="flex justify-center items-center bg-white rounded-full text-xs md:text-sm bg-opacity-30 px-2 m-1">
                                             {genre.name}
                                         </span>
                                     ))}

@@ -173,15 +173,15 @@ export default function SeriesDetails() {
                                 <p>
                                     <span className="text-lg font-bold text-pink-600 mr-2">Episodes:</span>
                                     {details.number_of_episodes}</p>
-                                <p>
+                                <div>
                                     <span className="text-lg font-bold text-pink-600 mr-2">Story Overview:</span>
-                                    {showOverView ? details.overview : details.overview.slice(0, 200) + '...'}
-                                    <p>  <button className='text-gray-400' onClick={() => setShowOverView(!showOverView)}>{showOverView ? 'less' : 'more...'}</button></p>
-                                </p>
+                                    {showOverView && details.overview.length>=200 ? details.overview : details.overview.slice(0, 200)}
+                                      <button className='text-gray-400 font-bold mx-1' onClick={() => setShowOverView(!showOverView)}>{showOverView ? 'less' : 'more...'}</button>
+                                </div>
 
                                 <div className="flex">
                                     {thisMovieGenre.map(genre => (
-                                        <span key={genre.id} className="bg-white rounded-full text-sm bg-opacity-30 px-2 m-1">
+                                        <span key={genre.id} className="flex justify-center items-center bg-white rounded-full text-xs md:text-sm bg-opacity-30 px-2 m-1">
                                             {genre.name}
                                         </span>
                                     ))}
