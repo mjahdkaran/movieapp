@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 export default function DownLoadLinks({ downloadLinksArray=[] }) {
     const [copyMessage, setCopyMessage] = useState(false);
     const [mousePos, setMousePos] = useState({ x: 0, y: 0 });    
-
+const [isLoading,setIsLoading]=useState(true)
     useEffect(() => {
         downloadLinksArray.length > 0 ? setIsLoading(false) : setIsLoading(true)
     },[downloadLinksArray])
