@@ -116,9 +116,9 @@ export const AuthProvider = ({ children }) => {
     }
 
     const getToken = () => {
-        let token = localStorage.getItem('token')
+        return  localStorage.getItem('token')
 
-        return token
+        
     }
     return (
 

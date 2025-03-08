@@ -1,36 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { Bottom, Up } from '../../utils/icon';
-import { getSubTitlesLinks } from '../../utils/api';
+import { getDownloadLinks, getSubTitlesLinks } from '../../utils/api';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../Context/AuthContext';
 
-export default function DownLoadLinks({ downloadLinksArray = [], token, movieId, movieType }) {
+export default function DownLoadLinks({ movieName, movieId, movieType }) {
     const [copyMessage, setCopyMessage] = useState(false);
     const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
     const [isLoading, setIsLoading] = useState(true)
     const [showLinks, setShowLinks] = useState({ movie: true, subtitle: false })
     const [subtitleArray, setSubtitleArray] = useState([])
+    const[downloadLinksArray,setDownloadLinksArray]=useState([])
+    
+    const {token}=useAuth()
     useEffect(() => {
-        const fetchingSubtitle = async () => {
-            try {
-                const data = await getSubTitlesLinks(token, movieId, movieType)
-
-                setSubtitleArray(data)
-                console.log('subtitle', data)
-            } catch (error) {
-                setSubtitleArray([])
-                console.error('error fetching subtitles', error)
-            }
-
-        }
         fetchingSubtitle()
+        fetchDownloadLinks()
+        console.log('token in Download',token)
     }, [])
-    useEffect(() => {
-        downloadLinksArray.length > 0 ? setIsLoading(false) : setIsLoading(true)
-
-    }, [downloadLinksArray])
-    // مرتب‌سازی کیفیت از کم به زیاد
-    const sortedLinks = [...downloadLinksArray].sort((a, b) => parseInt(a.quality) - parseInt(b.quality));
-
+  
+   
     const handleLinkClick = (event, url) => {
         event.preventDefault();
 
@@ -47,7 +36,38 @@ export default function DownLoadLinks({ downloadLinksArray = [], token, movieId,
             })
             .catch((err) => console.error("خطا در کپی کردن لینک:", err));
     };
+    //گرفتن لینک های دانلود
+  const fetchDownloadLinks = async () => {
+setIsLoading(true)
+        try {
+            const response = await getDownloadLinks(token,movieName)
+            console.log('fetched download links', response)
+            const sortedLinks = [...response].sort((a, b) => parseInt(a.quality) - parseInt(b.quality));
 
+            setDownloadLinksArray(sortedLinks)
+        }
+        
+         catch (error) {
+            setDownloadLinksArray([])
+            console.error('Error fetching download links in movieDetails', error)
+        }finally{
+            setIsLoading(false)
+        }
+    }
+
+    //گرفتن لینک های زیر نویس
+    const fetchingSubtitle = async () => {
+        try {
+            const data = await getSubTitlesLinks(token, movieId, movieType)
+
+            setSubtitleArray(data)
+            console.log('subtitle', data)
+        } catch (error) {
+            setSubtitleArray([])
+            console.error('error fetching subtitles', error)
+        }
+
+    }
     const clickHandler = (e) => {
         const buttonName = e.currentTarget.name;
         console.log(buttonName);
@@ -67,7 +87,7 @@ export default function DownLoadLinks({ downloadLinksArray = [], token, movieId,
                         {/* لینک های فیلم */}
                         <button name='movie' onClick={clickHandler} className='flex justify-between  text-white  hover:bg-blue-black border border-pink-600 rounded-md p-1  mb-5 w-full' >DownLoad Links  {showLinks.movie ? <Bottom /> : <Up />}</button>
                         <ul className={` flex-wrap  ${showLinks.movie ? 'flex' : 'hidden'} justify-start  text-gray- text-xs`}>
-                            {sortedLinks.map((link, index) => (
+                            {downloadLinksArray.map((link, index) => (
                                 <li
                                     onClick={(e) => handleLinkClick(e, link.link)}
                                     key={index}

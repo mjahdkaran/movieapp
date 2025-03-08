@@ -3,7 +3,7 @@ import PageLayout from '../../Layout/PageLayout';
 import style from './MovieDetails.module.css';
 import { Back, Comment, Download, Heart, InFormation, Save, } from '../../utils/icon';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { fetchMovieById, saveMovieTolist, removeMovieFromList, checkSavedOrLiked, getComments, getChildCommentsByParentId, getDownloadLinks } from '../../utils/api';
+import { fetchMovieById, saveMovieTolist, removeMovieFromList, checkSavedOrLiked, getComments, getChildCommentsByParentId } from '../../utils/api';
 import { useAuth } from '../../Context/AuthContext';
 import axios from 'axios';
 import CommentSection from '../../Components/CommentSection/CommentSection';
@@ -22,13 +22,28 @@ export default function Movie() {
     const [comment] = useState('');
     const [allCommentsArray, setAllCommentsArray] = useState([])
     const [childComments, setChildComments] = useState({}); // کامنت‌های فرزند هر کامنت
-    const [downloadLinksArray, setDownloadLinksArray] = useState([])
     const [parentComment, setParentComment] = useState({})
-    const { token } = useAuth();
+    const { token,getToken } = useAuth();
+    const [newToken,setNewToken]=useState(null)
     const navigate = useNavigate();
     const location = useLocation();
     const movieId = location.state;
 
+    useEffect(()=>{
+
+const fetchingToken= async()=>{
+    try {
+        const response =await getToken()
+setNewToken(response)
+    } catch (error) {
+        setNewToken(null)
+        console.error('error in fetching token',error)
+    }
+
+}
+fetchingToken()
+    
+    },[newToken])
     useEffect(() => {
 
 
@@ -72,16 +87,7 @@ export default function Movie() {
             console.error('Error getting movies comments', error)
         }
     }
-    //---------
-    const fetchDownloadLinks = async () => {
-        try {
-            const response = await getDownloadLinks(token, details.title)
-            console.log('fetched download links', response)
-            setDownloadLinksArray(response)
-        } catch (error) {
-            console.error('Error fetching download links in movieDetails', error)
-        }
-    }
+
     //-------------
     const fetchChildComments = async (parentId) => {
         console.log('parentId', parentId)
@@ -107,14 +113,7 @@ export default function Movie() {
     //----
     const handleTabChange = (tab) => {
         setShowTab({ info: false, download: false, comments: false, [tab]: true });
-
-        if (tab === "comments" && allCommentsArray.length === 0) {
-            fetchComments(); // فقط اگر قبلاً لود نشده باشد
-
-        } else if (tab === "download") {
-            fetchDownloadLinks()
-        }
-
+      
     };
 
 
@@ -182,7 +181,7 @@ export default function Movie() {
                             </div>
                             <div className="text-white flex flex-1 flex-col mx-0 mt-4 md:mx-6">
                                 <p>
-                                    <span className="text-lg font-bold text-pink-600 mr-2">Film:</span> {details.title}
+                                    <span className="text-lg font-bold text-pink-600 mr-2">Film:</span> {details.title}  {`(${details.release_date})`}
                                 </p>
                                 <p className='my-2'><span className='font-bold  text-pink-500'>IMDB  : </span>   {details.vote_average.toFixed(1).replace(/\.0$/, '')} <span className='text-gray-500'>/10</span></p>
                                 <p>{details.adult ? 'Suitable for over 18 years old.' : 'Suitable for all ages'}</p>
@@ -249,10 +248,14 @@ export default function Movie() {
                 {/* --------------content------------ */}
                 <div className='bg-gray-900'>
                     {showTab.info && <div>this is InFormation</div>}
-                    {showTab.download && <div><DownLoadLinks
-                        downloadLinksArray={downloadLinksArray}
-                        token={token} movieId={movieId} movieType={1}
-                    /></div>}
+                    {showTab.download && <div>
+                        {newToken===null?<p className=' text-center p-2 text-red-500 font-bold  '>You're not Access !Please login first.</p>:
+                        <DownLoadLinks
+                        movieName={details.title}
+                        movieId={movieId}
+                        movieType={1}
+                    />}
+                        </div>}
                     {showTab.comments &&
                         <div className='  w-full  md:px-36  text-white  pb-24 '>
 
