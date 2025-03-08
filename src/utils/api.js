@@ -242,7 +242,7 @@ export const searchingFunction = async (debounceQuery, endpoint) => {
 //گرفتن کامنت ها با id , سریال فیلم
 export const getComments=async(movieId,movieType)=>{
     try {
-        const response = await axios.get(`http://65.109.177.24:2024/api/comment/movie/${movieId}/${movieType}`)
+        const response = await axios.get(`${API_Base_URL_AMIR}comment/movie/${movieId}/${movieType}`)
         return response.data
     } catch (error) {
         console.error('Error getting comments', error)
@@ -259,7 +259,7 @@ export const getChildCommentsByParentId = async (parentId, take = 50, skip = 0) 
     }
 
     try {
-        const response = await axios.get(`http://65.109.177.24:2024/api/comment/parent/${parentId}`, {
+        const response = await axios.get(`${API_Base_URL_AMIR}comment/parent/${parentId}`, {
             params: { take, skip }
         });
         console.log('child',response.data.getCommentChildrenResults)
@@ -274,7 +274,7 @@ export const getChildCommentsByParentId = async (parentId, take = 50, skip = 0) 
     //گرفتن لینک های دانلود
     export const  getDownloadLinks=async(token,movieName)=>{
         try {
-            const response=await axios.get(`http://65.109.177.24:2024/api/movie/download-links/${movieName}`,{
+            const response=await axios.get(`${API_Base_URL_AMIR}movie/download-links/${movieName}`,{
                 headers:{
                     authorization:`Bearer ${token}` 
                 }
@@ -285,3 +285,19 @@ export const getChildCommentsByParentId = async (parentId, take = 50, skip = 0) 
             console.error('error get download links',error)
         }
     }
+//گرفتن زیر نویس ها 
+export const getSubTitlesLinks=async(token,movieId,movieType,season=0,episode=0)=>{
+    try {
+        const response=await axios.get(`${API_Base_URL_AMIR}movie/subtitle/${movieId}/${movieType}`,{
+            params:{
+                season,
+                episode
+            },headers:{
+                authorization:`Bearer ${token}`
+            }
+        })
+        return response.data.data
+    } catch (error) {
+        console.error('error get subtitles links',error)
+    }
+}
