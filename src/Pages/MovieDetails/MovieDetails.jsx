@@ -189,13 +189,13 @@ export default function Movie() {
                                 <div>
                                     <span className="text-lg font-bold text-pink-600 mr-2">Story Overview:</span>
 
-                                    {showMore &&details.overview.length>=200 ? details.overview : details.overview.slice(0, 200) }
+                                    {showMore && details.overview.length >= 200 ? details.overview : details.overview.slice(0, 200)}
                                     <button className='font-bold text-gray-400 mx-1' onClick={() => setShowMore(!showMore)}>{showMore ? 'less' : 'more...'}</button>
 
                                 </div>
-                               
 
-                            
+
+
                                 <div className="flex">
                                     {thisMovieGenre.map(genre => (
                                         <span key={genre.name} className="flex justify-center items-center bg-white rounded-full text-xs md:text-sm bg-opacity-30 px-2 m-1">
@@ -250,7 +250,9 @@ export default function Movie() {
                 <div className='bg-gray-900'>
                     {showTab.info && <div>this is InFormation</div>}
                     {showTab.download && <div><DownLoadLinks
-                        downloadLinksArray={downloadLinksArray} /></div>}
+                        downloadLinksArray={downloadLinksArray}
+                        token={token} movieId={movieId} movieType={1}
+                    /></div>}
                     {showTab.comments &&
                         <div className='  w-full  md:px-36  text-white  pb-24 '>
 
@@ -290,8 +292,8 @@ export default function Movie() {
                 {/* info download comment section */}
                 {/* similar movies section */}
                 <div><SimilarMovies
-                movieType='movie'
-                movieId={details.id}
+                    movieType='movie'
+                    movieId={details.id}
                 /></div>{/* similar movies section */}
             </div>
 

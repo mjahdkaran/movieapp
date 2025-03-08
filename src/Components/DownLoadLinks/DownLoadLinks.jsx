@@ -1,11 +1,30 @@
 import React, { useEffect, useState } from 'react';
+import { Bottom, Up } from '../../utils/icon';
+import { getSubTitlesLinks } from '../../utils/api';
 
-export default function DownLoadLinks({ downloadLinksArray=[] }) {
+export default function DownLoadLinks({ downloadLinksArray=[],token, movieId,movieType }) {
     const [copyMessage, setCopyMessage] = useState(false);
     const [mousePos, setMousePos] = useState({ x: 0, y: 0 });    
 const [isLoading,setIsLoading]=useState(true)
+const [showLinks,setShowLinks]=useState({movie:true,subtitle:false})
+const [subtitleArray,setSubtitleArray]=useState([])
+useEffect(()=>{
+    const fetchingSubtitle= async()=>{
+        try {
+            const data=await getSubTitlesLinks(token, movieId,movieType)
+            setSubtitleArray(data)
+            console.log('subtitle', data)
+        } catch (error) {
+            setSubtitleArray([])
+            console.error('error fetching subtitles', error)
+        }
+       
+    }
+    fetchingSubtitle()
+},[])
     useEffect(() => {
         downloadLinksArray.length > 0 ? setIsLoading(false) : setIsLoading(true)
+     
     },[downloadLinksArray])
     // مرتب‌سازی کیفیت از کم به زیاد
     const sortedLinks = [...downloadLinksArray].sort((a, b) => parseInt(a.quality) - parseInt(b.quality));
@@ -27,10 +46,24 @@ const [isLoading,setIsLoading]=useState(true)
             .catch((err) => console.error("خطا در کپی کردن لینک:", err));
     };
 
+    const clickHandler = (e) => {
+        const buttonName = e.currentTarget.name;
+    console.log(buttonName);
+        if (buttonName === 'movie') {
+            setShowLinks((prev) => ({ ...prev, movie: !prev.movie }));
+        } else if (buttonName === 'subtitle') {
+            setShowLinks((prev) => ({ ...prev, subtitle: !prev.subtitle }));
+        }
+    };
     return (
         <div className='p-1 relative'>
-            {isLoading ? <p className='text-white font-bold flex justify-center p-2 '>is Loading...</p> :
-                <ul className='flex flex-wrap justify-start md:justify-between text-gray- text-xs'>
+            {isLoading ?
+             <p className='text-white font-bold flex justify-center p-2 '>is Loading...</p> :
+      
+<div>
+<div >
+    <button name='movie' onClick={clickHandler} className='flex text-white  hover:bg-blue-black border border-pink-400 rounded-md p-1 mb-5' >DownLoadLinks  {showLinks.movie?<Bottom/>:<Up/>}</button>
+                <ul className={` flex-wrap  ${showLinks.movie? 'flex': 'hidden'} justify-start md:justify-between text-gray- text-xs`}>
                     {sortedLinks.map((link, index) => (
                         <li
                             onClick={(e) => handleLinkClick(e, link.link)}
@@ -42,7 +75,6 @@ const [isLoading,setIsLoading]=useState(true)
 
                                 className="cursor-pointer block"
                             >
-                                <span className='md:inline hidden'>DownLoad - </span>
                                 <span className='font-bold text-white'> {link.quality} </span>
                                 - {link.type} -
                                 <span className='font-bold text-white'> {link.size} </span>
@@ -50,6 +82,14 @@ const [isLoading,setIsLoading]=useState(true)
                         </li>
                     ))}
                 </ul>
+            {/* لینک های زیر نویس  */}
+           
+                </div>
+
+
+
+</div>
+                
             }
 
 
