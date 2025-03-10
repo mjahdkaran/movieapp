@@ -9,8 +9,15 @@ import axios from 'axios';
 import CommentSection from '../../Components/CommentSection/CommentSection';
 import AddComment from '../../Components/AddComment/AddComment';
 import DownLoadLinks from '../../Components/DownLoadLinks/DownLoadLinks';
-import SimilarMovies from '../../Components/SimilarMovies/SimilarMovies';
+// import SimilarMovies from '../../Components/SimilarMovies/SimilarMovies';
+const SimilarMoviesLazy = React.lazy(() => import('../../Components/SimilarMovies/SimilarMovies'));
 
+
+const tabs = [
+    { name: 'info', icon: <InFormation />, label: 'InFormation' },
+    { name: 'download', icon: <Download />, label: 'DownLoads' },
+    { name: 'comments', icon: <Comment />, label: 'Comments' }
+];
 export default function Movie() {
     const [isSaved, setIsSaved] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
@@ -23,27 +30,27 @@ export default function Movie() {
     const [allCommentsArray, setAllCommentsArray] = useState([])
     const [childComments, setChildComments] = useState({}); // کامنت‌های فرزند هر کامنت
     const [parentComment, setParentComment] = useState({})
-    const { token,getToken } = useAuth();
-    const [newToken,setNewToken]=useState(null)
+    const { token, getToken } = useAuth();
+    const [newToken, setNewToken] = useState(null)
     const navigate = useNavigate();
     const location = useLocation();
     const movieId = location.state;
 
-    useEffect(()=>{
+    useEffect(() => {
 
-const fetchingToken= async()=>{
-    try {
-        const response =await getToken()
-setNewToken(response)
-    } catch (error) {
-        setNewToken(null)
-        console.error('error in fetching token',error)
-    }
+        const fetchingToken = async () => {
+            try {
+                const response = await getToken()
+                setNewToken(response)
+            } catch (error) {
+                setNewToken(null)
+                console.error('error in fetching token', error)
+            }
 
-}
-fetchingToken()
-    
-    },[newToken])
+        }
+        fetchingToken()
+
+    }, [newToken])
     useEffect(() => {
 
 
@@ -110,11 +117,18 @@ fetchingToken()
         }
     }
 
+
+
+
     //----
-    const handleTabChange = (tab) => {
-        setShowTab({ info: false, download: false, comments: false, [tab]: true });
-      
+    const handleTabClick = (e) => {
+        const tab = e.target.getAttribute('data-tab');
+        if (tab) {
+            setShowTab({ info: false, download: false, comments: false, [tab]: true });
+            if (tab === 'comments') fetchComments();
+        }
     };
+
 
 
     const saveMovie = async () => {
@@ -204,6 +218,7 @@ fetchingToken()
                                 </div>
                             </div>
                         </div>
+
                         <div className="flex mt-3 p-3  ">
                             <button
                                 className={`flex items-center rounded-3xl text-sm font-medium md:w-20 h-8 p-2 m-1 ${isSaved ? 'border-2 border-pink-600 text-pink-600' : 'bg-white bg-opacity-30 text-white'
@@ -239,40 +254,47 @@ fetchingToken()
             {/* info download comment section */}
             <div className='w-full md:px-32 text-gray-400 '>
 
-                <ul className='flex justify-around list-none text-xs md:text-lg font-bold  '>
-                    <li className={`flex cursor-pointer items-center pt-3 px-1 rounded-md md:p-2 ${showTab.info && 'text-pink-600 bg-gray-900'}`} onClick={() => handleTabChange("info")}><InFormation /> InFormation</li>
-                    <li className={`flex cursor-pointer items-center pt-3 px-1 rounded-md md:p-2 ${showTab.download && 'text-pink-600 bg-gray-900'}`} onClick={() => handleTabChange("download")}><Download />DownLoads</li>
-                    <li className={`flex cursor-pointer items-center pt-3 px-1 rounded-md md:p-2 ${showTab.comments && 'text-pink-600 bg-gray-900'}`} onClick={() => handleTabChange("comments")}><Comment /> Comments</li>
-
+                <ul className='flex justify-around list-none text-xs md:text-lg font-bold ' onClick={handleTabClick}>
+                    {tabs.map((tab) => (
+                        <li
+                            key={tab.name}
+                            className={`flex cursor-pointer items-center pt-3 px-1 rounded-md md:p-2 ${showTab[tab.name] && 'text-pink-600 bg-gray-900'}`}
+                            data-tab={tab.name}
+                        >
+                            {tab.icon} {tab.label}
+                        </li>
+                    ))}
                 </ul>
                 {/* --------------content------------ */}
                 <div className='bg-gray-900'>
                     {showTab.info && <div>this is InFormation</div>}
                     {showTab.download && <div>
-                        {newToken===null?<p className=' text-center p-2 text-red-500 font-bold  '>You're not Access !Please login first.</p>:
-                        <DownLoadLinks
-                        movieName={details.title}
-                        movieId={movieId}
-                        movieType={1}
-                    />}
-                        </div>}
+                        {newToken === null ? <p className=' text-center p-2 text-red-500 font-bold  '>You're not Access !Please login first.</p> :
+                            <DownLoadLinks
+                                movieName={details.title}
+                                movieId={movieId}
+                                movieType={1}
+                            />}
+                    </div>}
                     {showTab.comments &&
                         <div className='  w-full  md:px-36  text-white  pb-24 '>
 
 
                             <div className='    rounded-sm p-2 w'>
                                 {/* ------Add comments------- */}
+                                {newToken === null ? <p className=' text-center p-2 text-red-500 font-bold  '>Log in first to post a comment.</p> :
 
-                                <AddComment
-                                    parentComment={parentComment}
-                                    setParentComment={setParentComment}
-                                    movieId={movieId}
-                                    movieType={1}
-                                    setAllCommentsArray={setAllCommentsArray}
-                                    fetchComments={fetchComments}
-                                    fetchChildComments={fetchChildComments}
-                                />
-                                {/* ------Add comments------- */}
+                                    <AddComment
+                                        parentComment={parentComment}
+                                        setParentComment={setParentComment}
+                                        movieId={movieId}
+                                        movieType={1}
+                                        setAllCommentsArray={setAllCommentsArray}
+                                        fetchComments={fetchComments}
+                                        fetchChildComments={fetchChildComments}
+                                    />}
+
+
 
                                 {/* ------users comments------ */}
                                 <div className=''>
@@ -287,6 +309,8 @@ fetchingToken()
                                 </div>
                                 {/* ------users comments------ */}
 
+
+
                             </div>
                         </div>
                     }
@@ -294,10 +318,12 @@ fetchingToken()
                 </div>{/* --------------content------------ */}
                 {/* info download comment section */}
                 {/* similar movies section */}
-                <div><SimilarMovies
-                    movieType='movie'
-                    movieId={details.id}
-                /></div>{/* similar movies section */}
+                <div>
+                    <React.Suspense fallback={<div>Loading Similar Movies...</div>}>
+                        <SimilarMoviesLazy movieType='movie' movieId={details.id} />
+                    </React.Suspense>
+
+                </div>{/* similar movies section */}
             </div>
 
         </PageLayout>
