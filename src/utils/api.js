@@ -98,7 +98,6 @@ export  const fetchSimilarMovie=async(movieType,movieId,page=1)=>{
                 page,
             }
         })
-        console.log('similar',response.data.results )
         return response.data.results || []
     } catch (error) {
         console.log(`error fetching  Similar movies: `, error);

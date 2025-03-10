@@ -97,7 +97,6 @@ export default function Movie() {
 
     //-------------
     const fetchChildComments = async (parentId) => {
-        console.log('parentId', parentId)
         try {
             const response = await getChildCommentsByParentId(parentId)
 
@@ -106,7 +105,7 @@ export default function Movie() {
                 ...prev,
                 [parentId]: response // ذخیره‌ی کامنت‌های فرزند بر اساس parentId
             }));
-
+            console.log(response)
             setShowReplies(prev => ({
                 ...prev,
                 [parentId]: true // نمایش کامنت‌های فرزند این کامنت
@@ -121,12 +120,9 @@ export default function Movie() {
 
 
     //----
-    const handleTabClick = (e) => {
-        const tab = e.target.getAttribute('data-tab');
-        if (tab) {
-            setShowTab({ info: false, download: false, comments: false, [tab]: true });
-            if (tab === 'comments') fetchComments();
-        }
+    const handleTabChange = (tab) => {
+        setShowTab({ info: false, download: false, comments: false, [tab]: true });
+        if (tab === 'comments') fetchComments();
     };
 
 
@@ -254,16 +250,11 @@ export default function Movie() {
             {/* info download comment section */}
             <div className='w-full md:px-32 text-gray-400 '>
 
-                <ul className='flex justify-around list-none text-xs md:text-lg font-bold ' onClick={handleTabClick}>
-                    {tabs.map((tab) => (
-                        <li
-                            key={tab.name}
-                            className={`flex cursor-pointer items-center pt-3 px-1 rounded-md md:p-2 ${showTab[tab.name] && 'text-pink-600 bg-gray-900'}`}
-                            data-tab={tab.name}
-                        >
-                            {tab.icon} {tab.label}
-                        </li>
-                    ))}
+                <ul className='flex justify-around list-none text-xs md:text-lg font-bold  '>
+                    <li className={`flex cursor-pointer items-center pt-3 px-1 rounded-md md:p-2 ${showTab.info && 'text-pink-600 bg-gray-900'}`} onClick={() => handleTabChange("info")}><InFormation /> InFormation</li>
+                    <li className={`flex cursor-pointer items-center pt-3 px-1 rounded-md md:p-2 ${showTab.download && 'text-pink-600 bg-gray-900'}`} onClick={() => handleTabChange("download")}><Download />DownLoads</li>
+                    <li className={`flex cursor-pointer items-center pt-3 px-1 rounded-md md:p-2 ${showTab.comments && 'text-pink-600 bg-gray-900'}`} onClick={() => handleTabChange("comments")}><Comment /> Comments</li>
+
                 </ul>
                 {/* --------------content------------ */}
                 <div className='bg-gray-900'>
