@@ -8,12 +8,13 @@ import { useAuth } from '../../Context/AuthContext';
 import CommentSection from '../../Components/CommentSection/CommentSection';
 import AddComment from '../../Components/AddComment/AddComment';
 import SimilarMovies from '../../Components/SimilarMovies/SimilarMovies';
+import Actors from '../../Components/Actors/Actors';
 
 export default function SeriesDetails() {
     const [isSaved, setIsSaved] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
     const [showReplies, setShowReplies] = useState({}); // وضعیت نمایش کامنت‌های فرزند
-    const [showTab, setShowTab] = useState({ info: true, download: false, comments: false });
+    const [showTab, setShowTab] = useState({ info: false, download: false, comments: false });
     const [showOverView, setShowOverView] = useState(false)
     const [thisMovieGenre, setThisMovieGenre] = useState([]);
     const [details, setDetails] = useState(null);
@@ -175,8 +176,8 @@ export default function SeriesDetails() {
                                     {details.number_of_episodes}</p>
                                 <div>
                                     <span className="text-lg font-bold text-pink-600 mr-2">Story Overview:</span>
-                                    {showOverView && details.overview.length>=200 ? details.overview : details.overview.slice(0, 200)}
-                                      <button className='text-gray-400 font-bold mx-1' onClick={() => setShowOverView(!showOverView)}>{showOverView ? 'less' : 'more...'}</button>
+                                    {showOverView && details.overview.length >= 200 ? details.overview : details.overview.slice(0, 200)}
+                                    <button className='text-gray-400 font-bold mx-1' onClick={() => setShowOverView(!showOverView)}>{showOverView ? 'less' : 'more...'}</button>
                                 </div>
 
                                 <div className="flex">
@@ -230,7 +231,9 @@ export default function SeriesDetails() {
                 </ul>
                 {/* --------------content------------ */}
                 <div className='bg-gray-900'>
-                    {showTab.info && <div>this is InFormation</div>}
+                    {showTab.info && <div><Actors
+                        movieId={movieId}
+                        movieType='tv' /></div>}
                     {showTab.download && <div>this is download</div>}
                     {showTab.comments &&
                         <div className='  w-full  md:px-36  text-white  pb-24 '>
