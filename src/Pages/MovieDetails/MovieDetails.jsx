@@ -9,8 +9,10 @@ import axios from 'axios';
 import CommentSection from '../../Components/CommentSection/CommentSection';
 import AddComment from '../../Components/AddComment/AddComment';
 import DownLoadLinks from '../../Components/DownLoadLinks/DownLoadLinks';
+import Actors from '../../Components/Actors/Actors';
 // import SimilarMovies from '../../Components/SimilarMovies/SimilarMovies';
 const SimilarMoviesLazy = React.lazy(() => import('../../Components/SimilarMovies/SimilarMovies'));
+
 
 
 const tabs = [
@@ -22,7 +24,7 @@ export default function Movie() {
     const [isSaved, setIsSaved] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
     const [showReplies, setShowReplies] = useState({}); // وضعیت نمایش کامنت‌های فرزند
-    const [showTab, setShowTab] = useState({ info: true, download: false, comments: false });
+    const [showTab, setShowTab] = useState({ info: false, download: false, comments: false });
     const [showMore, setShowMore] = useState(false)
     const [thisMovieGenre, setThisMovieGenre] = useState([]);
     const [details, setDetails] = useState(null);
@@ -258,7 +260,11 @@ export default function Movie() {
                 </ul>
                 {/* --------------content------------ */}
                 <div className='bg-gray-900'>
-                    {showTab.info && <div>this is InFormation</div>}
+                    {showTab.info && <div>
+                    
+                        <Actors
+                    movieType='movie'
+                    movieId={movieId}/></div>}
                     {showTab.download && <div>
                         {newToken === null ? <p className=' text-center p-2 text-red-500 font-bold  '>You're not Access !Please login first.</p> :
                             <DownLoadLinks

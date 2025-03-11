@@ -105,6 +105,21 @@ export  const fetchSimilarMovie=async(movieType,movieId,page=1)=>{
     }
     
 }
+//----گرفتن بازیگران 
+export const fetchActors=async(movieType,movieId)=>{
+    try {
+        const response=await ApiClient.get(`${movieType}/${movieId}/credits?language=en-US`,{
+            params:{
+                language: 'en-US',
+            }
+        })
+        console.log(response.data)
+        return response.data
+    } catch (error) {
+        console.error('Error fetching Actors',error)
+    }
+    
+}
 //-------------------------------
 export const fetchLanguages=async()=>{
     try {
