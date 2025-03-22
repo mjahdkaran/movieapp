@@ -12,6 +12,7 @@ import WhatchList from './Pages/WhatchList/WhatchList';
 import FavoriteList from './Pages/FavoriteList/FavoriteList';
 import Profile from './Pages/Profile/Profile';
 import SeriesDetail from './Pages/SeriesDetail/SeriesDetail';
+import AcotorDetail from './Components/AcotorDetail/AcotorDetail';
 export default function routes() {
     return (
         <Routes>
@@ -25,6 +26,7 @@ export default function routes() {
             <Route path="/watchlist" element={<WhatchList />} />
             <Route path="/liked" element={<FavoriteList />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/person/:id" element={<AcotorDetail />} />
 
             <Route path="*" element={<FallBackComponent />} />
 

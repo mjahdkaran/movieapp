@@ -105,8 +105,8 @@ export  const fetchSimilarMovie=async(movieType,movieId,page=1)=>{
     }
     
 }
-//----گرفتن بازیگران 
-export const fetchActors=async(movieType,movieId)=>{
+//---- گرفتن بازیگران هر فیلم 
+export const fetchActorsOfMovie=async(movieType,movieId)=>{
     try {
         const response=await ApiClient.get(`${movieType}/${movieId}/credits?language=en-US`,{
             params:{
@@ -120,6 +120,30 @@ export const fetchActors=async(movieType,movieId)=>{
     }
     
 }
+
+//----گرفتن اطلاعات هر بازیگر----
+export const fetchActorDetial=async(personId)=>{
+    try {
+        const response= await ApiClient.get(`person/${personId}`)
+        console.log(response.data)
+        return response.data
+        
+    } catch (error) {
+        console.error('Error fetching Actor Detail',error)
+    }
+}
+
+//------گرفتن لیست فیلم های هر بازیگر بر اساس آی دی بازیگر
+export const fetchActorMovies=async(personId,movietype)=>{
+    try {
+        const response= await ApiClient.get(`person/${personId}/${movietype}`)
+        console.log('movies',response.data)
+        return response.data
+        
+    } catch (error) {
+        console.error('Error fetching Actor Detail',error)
+    }
+}
 //-------------------------------
 export const fetchLanguages=async()=>{
     try {
@@ -132,10 +156,6 @@ export const fetchLanguages=async()=>{
         return[]
     }
 }
-
-
-
-
 
                 
 //-----  اضافه کردن فیلم به لیست------------
