@@ -39,20 +39,10 @@
 
 رابط کاربری اپلیکیشن کاملاً واکنش‌گرا است و با استفاده از **Tailwind CSS** طراحی شده است، به طوری که تجربه کاربری بهینه‌ای در دستگاه‌های مختلف (موبایل، تبلت و دسکتاپ) فراهم می‌کند.
 
-## **قابلیت‌های آینده**
 
-در نسخه‌های آینده، قابلیت‌های زیر به اپلیکیشن اضافه خواهد شد:
-
-1. افزودن **ثبت‌نام کاربران** و **مدیریت پروفایل**.
-2. پیاده‌سازی قابلیت **افزودن فیلم‌های محبوب به لیست علاقه‌مندی‌ها**.
-3. اضافه کردن قابلیت **جستجو** برای پیدا کردن فیلم‌ها.
-4. افزودن **پشتیبانی از نظرات و امتیازات کاربران**.
-
----
 
 ### **نکات تکمیلی**
 
-- برای مشاهده پوسترها و تصاویر پس‌زمینه فیلم‌ها، باید **فیلترشکن** خود را فعال کنید.
 - این اپلیکیشن با استفاده از **React Context API** برای مدیریت وضعیت استفاده شده است.
 
 - # **MovieLand**
@@ -81,8 +71,8 @@
 
 Use the following credentials to log in:
 
-- **Username:** `user`
-- **Password:** `user123`
+- **Username:** `admin`
+- **Password:** `Adm!n123`
 
 ## **Technologies Used**
 
@@ -96,20 +86,10 @@ Use the following credentials to log in:
 
 The app features a fully responsive user interface designed with **Tailwind CSS**, ensuring an optimal user experience across all devices (mobile, tablet, and desktop).
 
-## **Upcoming Features**
 
-The following features will be added in future versions:
-
-1. **User Registration** and **Profile Management**.
-2. Ability to **add popular movies to the favorites list**.
-3. **Search functionality** to find specific movies.
-4. Support for **user comments and ratings**.
-
----
 
 ### **Additional Notes**
 
-- To view movie posters and background images, you need to enable a **VPN**.
 - The app uses **React Context API** for state management.
 
 ---
